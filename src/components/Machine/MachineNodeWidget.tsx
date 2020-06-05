@@ -13,6 +13,7 @@ type SControlsProps = {
 };
 
 const S = {
+  Root: styled.div``,
   Ports: styled.div`
     border-top: 1px solid darkolivegreen;
     display: flex;
@@ -23,10 +24,14 @@ const S = {
     border-radius: 2px;
     padding: 0.5em;
     transform: scaleY(${p => p.isOpen ? 1 : 0});
-    transform-origin: bottom;
-    transition: transform 0.2s ease-out;
+    transform-origin: top;
+    transition: all 0.2s ease-out;
+    & > *:not(:last-child) {
+      margin-bottom: 0.5em;
+    }
   `,
   ControlDropdown: styled.select`
+    display: block;
     width: 100%;
   `,
   IngredientPorts: styled.div``,
@@ -48,22 +53,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
-      <S.Controls isOpen={isOpen}>
-        <S.ControlDropdown>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-        </S.ControlDropdown>
-        <S.ControlDropdown>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-        </S.ControlDropdown>
-      </S.Controls>
+    <S.Root onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
       <MachineWidgetBase
         iconName={node.machineName}
         isSelected={node.isSelected()}
@@ -85,6 +75,45 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
           </S.Ports>
         )}
       </MachineWidgetBase>
-    </div>
+      <S.Controls isOpen={isOpen}>
+        <S.ControlDropdown>
+          <option>-- Select Type --</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+        </S.ControlDropdown>
+        <S.ControlDropdown>
+          <option>-- Select Recipe --</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+          <option>Test option 1</option>
+        </S.ControlDropdown>
+      </S.Controls>
+    </S.Root>
   );
 };
