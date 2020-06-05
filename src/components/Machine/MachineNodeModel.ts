@@ -28,7 +28,7 @@ export class MachineNodeModel extends NodeModel {
     this.addPort(new MachinePortModel({ itemName: 'copper-plate', isIngredient: true }));
     this.addPort(new MachinePortModel({ itemName: 'iron-plate', isIngredient: true }));
     this.addPort(new MachinePortModel({ itemName: 'copper-cable', isIngredient: false }));
-    this.addPort(new MachinePortModel({ itemName: 'iron-cable', isIngredient: false }));
+    this.addPort(new MachinePortModel({ itemName: 'steel-plate', isIngredient: false }));
   }
 
   addPort(port: MachinePortModel) {

@@ -4,24 +4,28 @@ import styled from '@emotion/styled';
 
 import { MachineNodeModel } from './MachineNodeModel';
 import { MachinePortWidget } from './MachinePortWidget';
+import { Icon } from '../Icon';
 
-type SRoot = {
+const color = 'dodgerblue';
+const hoverBackground = '#f3f3f3';
+
+type SRootProps = {
   isSelected: boolean,
 };
 
 const S = {
-  Root: styled.div<SRoot>`
-    border: 1px solid dodgerblue;
+  Root: styled.div<SRootProps>`
+    border: 1px solid ${color};
     border-radius: 2px;
     border-width: ${p => p.isSelected ? '2px' : '1px'};
-    cursor: pointer;
+    opacity: 0.95;
     :hover {
-      background: #f3f3f3;
+      background: ${hoverBackground};
     }
   `,
   Title: styled.h4`
-    border-bottom: 1px solid dodgerblue;
-    padding: 0.5em;
+    border-bottom: 1px solid ${color};
+    padding: 0.25em;
     text-align: center;
   `,
   Ports: styled.div`
@@ -29,6 +33,10 @@ const S = {
     padding: 0.25rem;
   `,
   IngredientPorts: styled.div``,
+  PortsSpacer: styled.div`
+    flex-grow: 1;
+    min-width: 0.5em;
+  `,
   ResultPorts: styled.div``,
 };
 
@@ -44,7 +52,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
   return (
     <S.Root isSelected={node.isSelected()}>
       <S.Title>
-        {node.machineName}
+        <Icon itemOrRecipeName={node.machineName} />
       </S.Title>
       <S.Ports>
         <S.IngredientPorts>
@@ -52,6 +60,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
             <MachinePortWidget key={port.getName()} engine={engine} port={port} />
           ))}
         </S.IngredientPorts>
+        <S.PortsSpacer />
         <S.ResultPorts>
           {node.resultPorts.map(port => (
             <MachinePortWidget key={port.getName()} engine={engine} port={port} />

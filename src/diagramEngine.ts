@@ -17,7 +17,7 @@ const nodeFactories = diagramEngine.getNodeFactories();
 nodeFactories.registerFactory(new MachineNodeFactory());
 
 const node = new MachineNodeModel({
-  machineName: 'assemly-machine-1',
+  machineName: 'assembling-machine-1',
 });
 
 node.setPosition(100, 100);

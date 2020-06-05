@@ -3,10 +3,13 @@ import styled from '@emotion/styled';
 import { DiagramEngine, PortWidget } from '@projectstorm/react-diagrams';
 
 import { MachinePortModel } from './MachinePortModel';
+import { Icon } from '../Icon';
 
-const portSize = '10px';
+const portSize = '12px';
+const portColor = 'dodgerblue';
 
-type SPort = {
+type SPortProps = {
+  isConnected: boolean;
   isIngredient: boolean;
 };
 
@@ -18,16 +21,17 @@ const S = {
       margin-right: 0.5em;
     }
   `,
-  PortWidget: styled(PortWidget)<SPort>`
+  PortWidget: styled(PortWidget)<SPortProps>`
     align-self: center;
-    background: dodgerblue;
+    background: ${p => p.isConnected ? portColor: 'white'};
+    border: 1px solid ${portColor};
     border-radius: calc(${portSize} / 2);
-    cursor: pointer;
+    cursor: ${p => p.isIngredient ? 'inherit' : 'pointer'};
     display: inline-block;
     height: ${portSize};
     width: ${portSize};
     :hover {
-      opacity: 0.6;
+      background: ${p => p.isIngredient ? 'white' : portColor};
     }
   `,
 };
@@ -43,22 +47,23 @@ export const MachinePortWidget: React.SFC<MachinePortWidgetProps> = ({
   port: {
     itemName,
     isIngredient,
+    links,
   }
 }) => {
+  const renderIcon = () => (
+    <Icon itemOrRecipeName={itemName} size={25} />
+  );
   return (
     <S.Root>
-      {!isIngredient && (
-        <p>{itemName}</p>
-      )}
+      {!isIngredient && renderIcon()}
       <S.PortWidget
         key={port.getName()}
         port={port}
         engine={engine}
+        isConnected={Object.keys(links).length > 0}
         isIngredient={isIngredient}
       />
-      {isIngredient && (
-        <p>{itemName}</p>
-      )}
+      {isIngredient && renderIcon()}
     </S.Root>
   );
 };
