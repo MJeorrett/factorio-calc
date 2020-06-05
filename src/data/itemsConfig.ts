@@ -1,6 +1,6 @@
-import itemsConfig from './items-config.json';
+import rawItemsConfig from './items-config.json';
 
-export type Item = {
+export interface ItemConfigBase {
   icon_col: number,
   icon_row: number,
   localized_name?: {
@@ -8,15 +8,39 @@ export type Item = {
   },
 };
 
-export type Items = {
-  [k: string]: Item | undefined,
+export interface RecipeConfig extends ItemConfigBase {
+  category: string,
+  name: string;
 };
 
-export type ItemsConfig = {
-  items: Items,
-  recipes: Items,
+export interface MachineConfig extends ItemConfigBase {
+  crafting_categories: string[],
+  crafting_speed: number,
+}
+
+export interface ItemsConfig {
+  [k: string]: ItemConfigBase | undefined,
 };
 
-const typedItemsConfig: ItemsConfig = itemsConfig;
+export interface MachinesConfig {
+  [k: string]: MachineConfig | undefined,
+};
 
-export default typedItemsConfig;
+export interface RecipesConfig {
+  [k: string]: RecipeConfig,
+};
+
+export interface RootItemsConfig {
+  'assembling-machine': MachinesConfig,
+  'furnace': MachinesConfig,
+  items: ItemsConfig,
+  recipes: RecipesConfig,
+};
+
+const itemsConfig = rawItemsConfig as RootItemsConfig;
+
+export const allRecipes = Object.keys(itemsConfig.recipes).map(recipeName => (
+  itemsConfig.recipes[recipeName]
+));
+
+export default itemsConfig;

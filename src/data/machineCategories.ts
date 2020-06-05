@@ -1,5 +1,7 @@
+export type MachineCategoryName = 'assembling-machine' | 'furnace';
+
 export type MachineCategory = {
-  name: string,
+  name: MachineCategoryName,
   label: string,
   defaultMachine: string,
 };
