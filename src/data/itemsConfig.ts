@@ -30,6 +30,8 @@ export interface RecipesConfig {
   [k: string]: RecipeConfig,
 };
 
+export type MachineConfigKey = 'assembling-machine' | 'furnace';
+
 export interface RootItemsConfig {
   'assembling-machine': MachinesConfig,
   'furnace': MachinesConfig,

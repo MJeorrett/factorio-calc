@@ -52,11 +52,19 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
   node,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+
   const handleTypeSelect = (event: React.FormEvent) => {
     const selectElement = event.target as HTMLSelectElement;
     node.machineName = selectElement.value;
     engine.repaintCanvas();
   };
+
+  const handleRecipeSelect = (event: React.FormEvent) => {
+    const selectElement = event.target as HTMLSelectElement;
+    node.selectedRecipeName = selectElement.value;
+    engine.repaintCanvas();
+  }
+
   return (
     <S.Root onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
       <MachineWidgetBase
@@ -86,12 +94,11 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
             <option key={machineName} value={machineName}>{getLabel(machineName)}</option>
           ))}
         </S.ControlDropdown>
-        <S.ControlDropdown>
+        <S.ControlDropdown value={node.selectedRecipeName} onChange={handleRecipeSelect}>
           <option value="">-- Select Recipe --</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
+          {node.recipes.map(recipe => (
+            <option value={recipe.name}>{recipe.label}</option>
+          ))}
         </S.ControlDropdown>
       </S.Controls>
     </S.Root>
