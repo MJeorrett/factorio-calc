@@ -13,7 +13,6 @@ const portColor = 'darkolivegreen';
 
 type SPortProps = {
   isConnected: boolean;
-  isIngredient: boolean;
 };
 
 const S = {
@@ -29,12 +28,12 @@ const S = {
     background: ${p => p.isConnected ? portColor: 'white'};
     border: 1px solid ${portColor};
     border-radius: calc(${portSize} / 2);
-    cursor: ${p => p.isIngredient ? 'inherit' : 'pointer'};
+    cursor: pointer;
     display: inline-block;
     height: ${portSize};
     width: ${portSize};
     :hover {
-      background: ${p => p.isIngredient ? 'white' : portColor};
+      background: ${portColor};
     }
   `,
 };
@@ -69,7 +68,6 @@ export const MachinePortWidget: React.SFC<MachinePortWidgetProps> = ({
         port={port}
         engine={engine}
         isConnected={Object.keys(links).length > 0}
-        isIngredient={isIngredient}
       />
       {isIngredient && renderIcon()}
     </S.Root>
