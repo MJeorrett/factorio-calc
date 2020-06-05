@@ -20,6 +20,7 @@ function App() {
     <>
       <S.Title>Factorio Calc</S.Title>
       <C.Canvas engine={diagramEngine} />
+      <C.ToolTray />
     </>
   );
 }
