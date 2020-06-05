@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { Tooltip } from '@material-ui/core';
 
 import { getIconCoordinates } from '../data';
 
@@ -38,17 +39,35 @@ const S = {
 type IconProps = {
   itemOrRecipeName: string,
   size?: number,
+  tooltipText?: string,
+  tooltipPlacement?:
+    | 'bottom-end'
+    | 'bottom-start'
+    | 'bottom'
+    | 'left-end'
+    | 'left-start'
+    | 'left'
+    | 'right-end'
+    | 'right-start'
+    | 'right'
+    | 'top-end'
+    | 'top-start'
+    | 'top',
 };
 
 export const Icon: React.SFC<IconProps> = ({
   itemOrRecipeName,
   size = 32,
+  tooltipText = '',
+  tooltipPlacement = 'top',
 }) => {
   if (!itemOrRecipeName) {
     return (
-      <S.Placeholder size={size}>
-        ?
-      </S.Placeholder>
+      <Tooltip title={tooltipText} placement={tooltipPlacement}>
+        <S.Placeholder size={size}>
+          ?
+        </S.Placeholder>
+      </Tooltip>
     );
   }
 
@@ -61,14 +80,16 @@ export const Icon: React.SFC<IconProps> = ({
   const iconY = iconCoordinates.row * (-32 * (size / 32));
 
   return (
-    <S.Root
-      draggable="false"
-      src="images/pixel.gif"
-      size={size}
-      imageWidth={imageWidth}
-      imageHeight={imageHeight}
-      iconX={iconX}
-      iconY={iconY}
-    />
+    <Tooltip title={tooltipText} placement={tooltipPlacement}>
+      <S.Root
+        draggable="false"
+        src="images/pixel.gif"
+        size={size}
+        imageWidth={imageWidth}
+        imageHeight={imageHeight}
+        iconX={iconX}
+        iconY={iconY}
+      />
+    </Tooltip>
   );
 };

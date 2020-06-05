@@ -1,9 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { DiagramEngine, PortWidget } from '@projectstorm/react-diagrams';
+import { Tooltip } from '@material-ui/core';
 
-import { MachinePortModel } from './MachinePortModel';
+import { getLabel } from '../../data';
+
 import { Icon } from '../Icon';
+import { MachinePortModel } from './MachinePortModel';
 
 const portSize = '12px';
 const portColor = 'dodgerblue';
@@ -51,7 +54,12 @@ export const MachinePortWidget: React.SFC<MachinePortWidgetProps> = ({
   }
 }) => {
   const renderIcon = () => (
-    <Icon itemOrRecipeName={itemName} size={25} />
+    <Icon
+      itemOrRecipeName={itemName}
+      size={25}
+      tooltipText={itemName}
+      tooltipPlacement={isIngredient ? 'left' : 'right'}
+    />
   );
   return (
     <S.Root>

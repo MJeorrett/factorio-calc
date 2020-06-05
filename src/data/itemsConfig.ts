@@ -3,6 +3,9 @@ import itemsConfig from './items-config.json';
 export type Item = {
   icon_col: number,
   icon_row: number,
+  localized_name?: {
+    en: string,
+  },
 };
 
 export type Items = {

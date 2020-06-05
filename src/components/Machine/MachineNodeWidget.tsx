@@ -1,6 +1,8 @@
 import React from 'react';
-import {  DiagramEngine } from '@projectstorm/react-diagrams';
+import { DiagramEngine } from '@projectstorm/react-diagrams';
 import styled from '@emotion/styled';
+
+import { getLabel } from '../../data';
 
 import { MachineNodeModel } from './MachineNodeModel';
 import { MachinePortWidget } from './MachinePortWidget';
@@ -52,7 +54,10 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
   return (
     <S.Root isSelected={node.isSelected()}>
       <S.Title>
-        <Icon itemOrRecipeName={node.machineName} />
+        <Icon
+          itemOrRecipeName={node.machineName}
+          tooltipText={getLabel(node.machineName)}
+        />
       </S.Title>
       <S.Ports>
         <S.IngredientPorts>
