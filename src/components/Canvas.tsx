@@ -16,9 +16,9 @@ type CanvasProps = {
   engine: DiagramEngine,
 };
 
-export const Canvas = ({
+export const Canvas: React.SFC<CanvasProps> = ({
   engine,
-}: CanvasProps) => {
+}) => {
   return (
     <S.Root>
       <S.Canvas engine={engine} />

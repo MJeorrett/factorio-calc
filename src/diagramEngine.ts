@@ -1,4 +1,6 @@
-import createEngine, { DefaultDiagramState, DiagramModel, DefaultNodeModel } from '@projectstorm/react-diagrams';
+import createEngine, { DefaultDiagramState, DiagramModel } from '@projectstorm/react-diagrams';
+
+import { MachineNodeFactory, MachineNodeModel } from './components';
 
 export const diagramEngine = createEngine();
 
@@ -11,8 +13,11 @@ else {
   throw new Error('Expected state to be and instance of DefaultDiagramState.');
 }
 
-const node = new DefaultNodeModel({
-  name: 'test',
+const nodeFactories = diagramEngine.getNodeFactories();
+nodeFactories.registerFactory(new MachineNodeFactory());
+
+const node = new MachineNodeModel({
+  machineName: 'assemly-machine-1',
 });
 
 node.setPosition(100, 100);
