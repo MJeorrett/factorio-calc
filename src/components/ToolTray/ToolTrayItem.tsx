@@ -1,21 +1,9 @@
 import React from 'react';
-import styled from '@emotion/styled';
-import { Tooltip } from '@material-ui/core';
 
-import { getLabel, MachineCategory } from '../../data';
+import { MachineCategory } from '../../data';
 
-import { Icon } from '../Icon';
 import { dataTransferKey } from '../Canvas';
-
-const S = {
-  TrayItem: styled.div`
-    border: 1px solid darkolivegreen;
-    border-radius: 2px;
-    cursor: pointer;
-    padding: 0.5rem;
-    flex-shrink: 1;
-  `,
-};
+import { MachineWidgetBase } from '../MachineWidgetBase';
 
 type ToolTrayItemProps = {
   machineCategory: MachineCategory,
@@ -29,13 +17,16 @@ export const ToolTrayItem: React.SFC<ToolTrayItemProps> = ({
   };
 
   return (
-    <Tooltip title={machineCategory.label}>
-      <S.TrayItem
-        draggable={true}
-        onDragStart={handleDragStart}
-      >
-        <Icon itemOrRecipeName={machineCategory.defaultMachine} />
-      </S.TrayItem>
-    </Tooltip>
+    <div
+      draggable={true}
+      onDragStart={handleDragStart}
+      style={{ cursor: 'pointer' }}
+    >
+      <MachineWidgetBase
+        iconName={machineCategory.defaultMachine}
+        isSelected={false}
+        tooltipText={machineCategory.label}
+      />
+    </div>
   );
 };
