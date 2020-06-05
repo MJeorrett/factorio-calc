@@ -52,6 +52,11 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
   node,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const handleTypeSelect = (event: React.FormEvent) => {
+    const selectElement = event.target as HTMLSelectElement;
+    node.machineName = selectElement.value;
+    engine.repaintCanvas();
+  };
   return (
     <S.Root onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
       <MachineWidgetBase
@@ -76,38 +81,13 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
         )}
       </MachineWidgetBase>
       <S.Controls isOpen={isOpen}>
-        <S.ControlDropdown>
-          <option>-- Select Type --</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
-          <option>Test option 1</option>
+        <S.ControlDropdown value={node.machineName} onChange={handleTypeSelect}>
+          {node.machineCategory.machineNames.map(machineName => (
+            <option key={machineName} value={machineName}>{getLabel(machineName)}</option>
+          ))}
         </S.ControlDropdown>
         <S.ControlDropdown>
-          <option>-- Select Recipe --</option>
+          <option value="">-- Select Recipe --</option>
           <option>Test option 1</option>
           <option>Test option 1</option>
           <option>Test option 1</option>

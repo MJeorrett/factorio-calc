@@ -24,7 +24,7 @@ export const Canvas: React.SFC<CanvasProps> = ({
 }) => {
   const handleDrop: React.DragEventHandler = event => {
     const machineName = event.dataTransfer.getData(dataTransferKey);
-    const node = new MachineNodeModel({ machineName });
+    const node = new MachineNodeModel(machineName);
 
     let mousePosition = engine.getRelativeMousePoint(event);
     node.setPosition(mousePosition);

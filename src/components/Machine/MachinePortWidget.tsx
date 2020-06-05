@@ -1,9 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { DiagramEngine, PortWidget } from '@projectstorm/react-diagrams';
-import { Tooltip } from '@material-ui/core';
-
-import { getLabel } from '../../data';
 
 import { Icon } from '../Icon';
 import { MachinePortModel } from './MachinePortModel';

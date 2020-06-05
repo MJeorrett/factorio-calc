@@ -18,6 +18,6 @@ export class MachineNodeFactory extends AbstractReactFactory<MachineNodeModel, D
 
   generateModel() {
     console.log('Generate model called.');
-    return new MachineNodeModel({ machineName: 'default' });
+    return new MachineNodeModel('default');
   }
 }

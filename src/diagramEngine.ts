@@ -1,6 +1,6 @@
 import createEngine, { DefaultDiagramState, DiagramModel } from '@projectstorm/react-diagrams';
 
-import { MachineNodeFactory, MachineNodeModel } from './components';
+import { MachineNodeFactory } from './components';
 
 export const diagramEngine = createEngine();
 

@@ -1,29 +1,28 @@
 import { NodeModel } from '@projectstorm/react-diagrams';
 
 import { MachinePortModel } from './MachinePortModel';
-
-type MachineNodeModelOptions = {
-  machineName: string,
-};
+import { MachineCategory, findCategoryForMachine } from '../../data';
 
 export class MachineNodeModel extends NodeModel {
   static type = 'machine';
 
+  private _machineCategory: MachineCategory;
   private _machineName: string;
   private _ingredientPorts: MachinePortModel[] = [];
   private _resultPorts: MachinePortModel[] = [];
 
+  get machineCategory(): MachineCategory { return this._machineCategory }
   get machineName(): string { return this._machineName }
+  set machineName(value: string) { this._machineName = value }
   get ingredientPorts(): MachinePortModel[] { return this._ingredientPorts }
   get resultPorts(): MachinePortModel[] { return this._resultPorts }
 
-  constructor({
-    machineName,
-  }: MachineNodeModelOptions) {
+  constructor(machineName: string) {
     super({
       type: MachineNodeModel.type,
     });
 
+    this._machineCategory = findCategoryForMachine(machineName);
     this._machineName = machineName;
     this.addPort(new MachinePortModel({ itemName: 'copper-plate', isIngredient: true }));
     this.addPort(new MachinePortModel({ itemName: 'iron-plate', isIngredient: true }));
