@@ -2,7 +2,7 @@ import React from 'react';
 import { AbstractReactFactory, GenerateWidgetEvent } from '@projectstorm/react-canvas-core';
 
 import { MachineNodeModel } from './MachineNodeModel';
-import { MachineNodeWidget } from './MachineNodeWidget';
+import { MachineNodeWidgetContainer } from './MachineNodeWidgetContainer';
 import { DiagramEngine } from '@projectstorm/react-diagrams';
 
 export class MachineNodeFactory extends AbstractReactFactory<MachineNodeModel, DiagramEngine> {
@@ -12,7 +12,7 @@ export class MachineNodeFactory extends AbstractReactFactory<MachineNodeModel, D
 
   generateReactWidget(event: GenerateWidgetEvent<MachineNodeModel>) {
     return (
-      <MachineNodeWidget engine={this.engine} node={event.model} />
+      <MachineNodeWidgetContainer engine={this.engine} node={event.model}/>
     );
   }
 

@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { DiagramEngine } from '@projectstorm/react-diagrams';
 import styled from '@emotion/styled';
 
-import { getLabel } from '../../data';
+import { getLabel, Recipe, MachineCategory, MachineRecipe } from '../../data';
 import { MachineWidgetBase } from '../MachineWidgetBase';
 
 import { MachineNodeModel } from './MachineNodeModel';
 import { MachinePortWidget } from './MachinePortWidget';
+import { MachinePortModel } from './MachinePortModel';
 
 type SControlsProps = {
   isOpen: boolean,
 };
 
 const S = {
-  Root: styled.div``,
+  Root: styled.div`
+  `,
   Ports: styled.div`
     border-top: 1px solid darkolivegreen;
     display: flex;
@@ -26,6 +28,7 @@ const S = {
     transform: scaleY(${p => p.isOpen ? 1 : 0});
     transform-origin: top;
     transition: all 0.2s ease-out;
+    width: ${p => p.isOpen ? '100%' : 0};
     & > *:not(:last-child) {
       margin-bottom: 0.5em;
     }
@@ -44,61 +47,87 @@ const S = {
 
 type MachineNodeWidgetProps = {
   engine: DiagramEngine,
-  node: MachineNodeModel,
+  recipes: MachineRecipe[],
+  selectedRecipe: Recipe | null,
+  isSelected: boolean,
+  machineName: string,
+  label: string,
+  machineCategory: MachineCategory,
+  ingredientPorts: MachinePortModel[],
+  resultPorts: MachinePortModel[],
+  setMachineName: (machineName: string) => void,
+  setSelectedRecipeName: (recipeName: string) => void,
 };
 
-export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
+export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo(({
   engine,
-  node,
+  isSelected,
+  machineName,
+  machineCategory,
+  label,
+  recipes,
+  selectedRecipe,
+  ingredientPorts,
+  resultPorts,
+  setMachineName,
+  setSelectedRecipeName,
 }) => {
   const handleTypeSelect = (event: React.FormEvent) => {
     const selectElement = event.target as HTMLSelectElement;
-    node.machineName = selectElement.value;
+    setMachineName(selectElement.value);
     engine.repaintCanvas();
   };
 
   const handleRecipeSelect = (event: React.FormEvent) => {
     const selectElement = event.target as HTMLSelectElement;
-    node.setSelectedRecipeName(selectElement.value);
+    setSelectedRecipeName(selectElement.value);
     engine.repaintCanvas();
   }
+
+  const anyPorts = ingredientPorts.length + resultPorts.length > 0;
 
   return (
     <S.Root>
       <MachineWidgetBase
-        iconName={node.machineName}
-        isSelected={node.isSelected()}
-        tooltipText={getLabel(node.machineName)}
+        iconName={machineName}
+        isSelected={isSelected}
+        tooltipText={label}
       >
-        {Object.keys(node.getPorts()).length > 0 && (
+        {anyPorts && (
           <S.Ports>
             <S.IngredientPorts>
-              {node.ingredientPorts.map(port => (
+              {ingredientPorts.map(port => (
                 <MachinePortWidget key={port.getName()} engine={engine} port={port} />
               ))}
             </S.IngredientPorts>
             <S.PortsSpacer />
             <S.ResultPorts>
-              {node.resultPorts.map(port => (
+              {resultPorts.map(port => (
                 <MachinePortWidget key={port.getName()} engine={engine} port={port} />
               ))}
             </S.ResultPorts>
           </S.Ports>
         )}
       </MachineWidgetBase>
-      <S.Controls isOpen={node.isSelected()}>
-        <S.ControlDropdown value={node.machineName} onChange={handleTypeSelect}>
-          {node.machineCategory.machineNames.map(machineName => (
+      <S.Controls isOpen={isSelected}>
+        <S.ControlDropdown value={machineName} onChange={handleTypeSelect}>
+          {machineCategory.machineNames.map(machineName => (
             <option key={machineName} value={machineName}>{getLabel(machineName)}</option>
           ))}
         </S.ControlDropdown>
-        <S.ControlDropdown value={node.selectedRecipe ? node.selectedRecipe.name : ''} onChange={handleRecipeSelect}>
+        <S.ControlDropdown value={selectedRecipe ? selectedRecipe.name : ''} onChange={handleRecipeSelect}>
           <option value="">-- Select Recipe --</option>
-          {node.recipes.map(recipe => (
+          {recipes.map(recipe => (
             <option key={recipe.name} value={recipe.name}>{recipe.label}</option>
           ))}
         </S.ControlDropdown>
       </S.Controls>
     </S.Root>
   );
-};
+}, (prev, next) => {
+  return (
+    prev.isSelected === next.isSelected &&
+    prev.selectedRecipe === next.selectedRecipe &&
+    prev.machineName === next.machineName
+  );
+});
