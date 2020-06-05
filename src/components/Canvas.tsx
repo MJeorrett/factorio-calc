@@ -28,6 +28,8 @@ export const Canvas: React.SFC<CanvasProps> = ({
 
     let mousePosition = engine.getRelativeMousePoint(event);
     node.setPosition(mousePosition);
+    engine.getModel().clearSelection();
+    node.setSelected(true);
 
     engine.getModel().addNode(node);
     engine.repaintCanvas();

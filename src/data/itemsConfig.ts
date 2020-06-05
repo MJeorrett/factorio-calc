@@ -8,9 +8,16 @@ export interface ItemConfigBase {
   },
 };
 
+interface RecipeItem {
+  amount: number,
+  name: string,
+}
+
 export interface RecipeConfig extends ItemConfigBase {
   category: string,
   name: string;
+  ingredients: RecipeItem[],
+  results: RecipeItem[],
 };
 
 export interface MachineConfig extends ItemConfigBase {

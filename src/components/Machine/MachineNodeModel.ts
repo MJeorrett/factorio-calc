@@ -1,7 +1,7 @@
 import { NodeModel } from '@projectstorm/react-diagrams';
 
 import { MachinePortModel } from './MachinePortModel';
-import { MachineCategory, findCategoryForMachine, MachineRecipe, getRecipesForMachine } from '../../data';
+import { MachineCategory, findCategoryForMachine, MachineRecipe, getRecipesForMachine, Recipe, findRecipeByName } from '../../data';
 
 export class MachineNodeModel extends NodeModel {
   static type = 'machine';
@@ -9,7 +9,7 @@ export class MachineNodeModel extends NodeModel {
   private _machineCategory: MachineCategory;
   private _machineName: string;
   private _recipes: MachineRecipe[];
-  private _selectedRecipeName: string;
+  private _selectedRecipe: Recipe | null = null;
   private _ingredientPorts: MachinePortModel[] = [];
   private _resultPorts: MachinePortModel[] = [];
 
@@ -17,13 +17,12 @@ export class MachineNodeModel extends NodeModel {
   set machineName(value: string) {
     this._machineName = value;
     this._recipes = getRecipesForMachine(this.machineCategory.configKey, this._machineName);
-    if (!this._recipes.find(r => r.name === this._selectedRecipeName)) {
-      this._selectedRecipeName = '';
+    if (!this._recipes.find(r => r.name === this._selectedRecipe?.name)) {
+      this._selectedRecipe = null;
     }
   }
 
-  get selectedRecipeName(): string { return this._selectedRecipeName }
-  set selectedRecipeName(value: string) { this._selectedRecipeName = value }
+  get selectedRecipe(): Recipe | null { return this._selectedRecipe }
 
   get recipes(): MachineRecipe[] { return this._recipes }
   get machineCategory(): MachineCategory { return this._machineCategory }
@@ -38,11 +37,26 @@ export class MachineNodeModel extends NodeModel {
     this._machineCategory = findCategoryForMachine(machineName);
     this._machineName = machineName;
     this._recipes = getRecipesForMachine(this.machineCategory.configKey, machineName);
-    this._selectedRecipeName = '';
-    this.addPort(new MachinePortModel({ itemName: 'copper-plate', isIngredient: true }));
-    this.addPort(new MachinePortModel({ itemName: 'iron-plate', isIngredient: true }));
-    this.addPort(new MachinePortModel({ itemName: 'copper-cable', isIngredient: false }));
-    this.addPort(new MachinePortModel({ itemName: 'steel-plate', isIngredient: false }));
+  }
+
+  setSelectedRecipeName(value: string) {
+    var recipe = findRecipeByName(value);
+    this._selectedRecipe = recipe;
+
+    Object.keys(this.ports).forEach(portName => {
+      const port = this.ports[portName];
+      Object.keys(port.links).forEach(linkName => {
+        port.links[linkName].remove();
+      });
+      this.removePort(this.ports[portName] as MachinePortModel);
+    });
+
+    recipe.ingredients.forEach(ingredient => {
+      this.addPort(new MachinePortModel({ itemName: ingredient.name, isIngredient: true }));
+    });
+    recipe.results.forEach(result => {
+      this.addPort(new MachinePortModel({ itemName: result.name, isIngredient: false }));
+    })
   }
 
   addPort(port: MachinePortModel) {
@@ -58,10 +72,10 @@ export class MachineNodeModel extends NodeModel {
 
   removePort(port: MachinePortModel) {
     if (port.isIngredient) {
-      this._ingredientPorts = this._ingredientPorts.filter(p => p.getID() === port.getID());
+      this._ingredientPorts = this._ingredientPorts.filter(p => p.getID() !== port.getID());
     }
     else {
-      this._resultPorts = this._resultPorts.filter(p => p.getID() === port.getID());
+      this._resultPorts = this._resultPorts.filter(p => p.getID() !== port.getID());
     }
 
     super.removePort(port);

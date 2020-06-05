@@ -38,6 +38,7 @@ export class MachinePortModel extends PortModel {
 
   canLinkToPort(otherPort: MachinePortModel) {
     return otherPort.isIngredient &&
-      this._itemName === otherPort._itemName;
+      this._itemName === otherPort._itemName &&
+      otherPort.parent !== this.parent;
   }
 }

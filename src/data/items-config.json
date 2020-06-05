@@ -2533,7 +2533,7 @@
             "icon_col": 14,
             "icon_row": 10,
             "localized_name": {
-                "en": "<dummy name>"
+                "en": "Rail"
             },
             "name": "rail",
             "order": "a[train-system]-a[rail]",

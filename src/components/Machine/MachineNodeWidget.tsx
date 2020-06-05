@@ -51,8 +51,6 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
   engine,
   node,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const handleTypeSelect = (event: React.FormEvent) => {
     const selectElement = event.target as HTMLSelectElement;
     node.machineName = selectElement.value;
@@ -61,12 +59,12 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
 
   const handleRecipeSelect = (event: React.FormEvent) => {
     const selectElement = event.target as HTMLSelectElement;
-    node.selectedRecipeName = selectElement.value;
+    node.setSelectedRecipeName(selectElement.value);
     engine.repaintCanvas();
   }
 
   return (
-    <S.Root onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+    <S.Root>
       <MachineWidgetBase
         iconName={node.machineName}
         isSelected={node.isSelected()}
@@ -88,16 +86,16 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = ({
           </S.Ports>
         )}
       </MachineWidgetBase>
-      <S.Controls isOpen={isOpen}>
+      <S.Controls isOpen={node.isSelected()}>
         <S.ControlDropdown value={node.machineName} onChange={handleTypeSelect}>
           {node.machineCategory.machineNames.map(machineName => (
             <option key={machineName} value={machineName}>{getLabel(machineName)}</option>
           ))}
         </S.ControlDropdown>
-        <S.ControlDropdown value={node.selectedRecipeName} onChange={handleRecipeSelect}>
+        <S.ControlDropdown value={node.selectedRecipe ? node.selectedRecipe.name : ''} onChange={handleRecipeSelect}>
           <option value="">-- Select Recipe --</option>
           {node.recipes.map(recipe => (
-            <option value={recipe.name}>{recipe.label}</option>
+            <option key={recipe.name} value={recipe.name}>{recipe.label}</option>
           ))}
         </S.ControlDropdown>
       </S.Controls>
