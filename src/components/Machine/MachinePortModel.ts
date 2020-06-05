@@ -1,4 +1,4 @@
-import { PortModel, DefaultLinkModel, PortModelAlignment } from '@projectstorm/react-diagrams';
+import { PortModel, PortModelAlignment, DefaultLinkModel } from '@projectstorm/react-diagrams';
 
 type MachinePortModelOptions = {
   itemName: string,
@@ -28,7 +28,10 @@ export class MachinePortModel extends PortModel {
   createLinkModel() {
     if (this._isIngredient) return null;
 
-    const link = new DefaultLinkModel();
+    const link = new DefaultLinkModel({
+      color: 'darkolivegreen',
+      selectedColor: 'darkolivegreen',
+    });
 
     return link;
   }

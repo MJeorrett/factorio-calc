@@ -16,13 +16,20 @@ else {
 const nodeFactories = diagramEngine.getNodeFactories();
 nodeFactories.registerFactory(new MachineNodeFactory());
 
-const node = new MachineNodeModel({
-  machineName: 'assembling-machine-1',
-});
+const nodes = [
+  new MachineNodeModel({
+    machineName: 'assembling-machine-1',
+  }),
+  new MachineNodeModel({
+    machineName: 'assembling-machine-2',
+  }),
+];
 
-node.setPosition(100, 100);
+nodes[0].setPosition(100, 100);
+nodes[1].setPosition(100, 300);
 
 const model = new DiagramModel();
-model.addNode(node);
+model.addNode(nodes[0]);
+model.addNode(nodes[1]);
 
 diagramEngine.setModel(model);

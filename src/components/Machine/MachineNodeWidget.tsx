@@ -8,7 +8,7 @@ import { MachineNodeModel } from './MachineNodeModel';
 import { MachinePortWidget } from './MachinePortWidget';
 import { Icon } from '../Icon';
 
-const color = 'dodgerblue';
+const color = 'darkolivegreen';
 const hoverBackground = '#f3f3f3';
 
 type SRootProps = {
@@ -17,6 +17,7 @@ type SRootProps = {
 
 const S = {
   Root: styled.div<SRootProps>`
+    background: white;
     border: 1px solid ${color};
     border-radius: 2px;
     border-width: ${p => p.isSelected ? '2px' : '1px'};

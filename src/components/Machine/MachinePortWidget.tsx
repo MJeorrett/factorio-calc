@@ -9,7 +9,7 @@ import { Icon } from '../Icon';
 import { MachinePortModel } from './MachinePortModel';
 
 const portSize = '12px';
-const portColor = 'dodgerblue';
+const portColor = 'darkolivegreen';
 
 type SPortProps = {
   isConnected: boolean;

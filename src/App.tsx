@@ -6,6 +6,7 @@ import { diagramEngine } from './diagramEngine'
 
 const S = {
   Title: styled.h1`
+    color: darkolivegreen;
     left: 0;
     position: absolute;
     text-align: center;
