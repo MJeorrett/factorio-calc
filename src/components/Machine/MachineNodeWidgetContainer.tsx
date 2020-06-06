@@ -31,6 +31,7 @@ export const MachineNodeWidgetContainer: React.SFC<MachineNodeWidgetContainerPro
     <>
       <MachineNodeWidget
         engine={engine}
+        portLinks={node.portLinks}
         isSelected={node.isSelected()}
         machineNames={node.machineCategory.machineNames}
         machineName={node.machineName}

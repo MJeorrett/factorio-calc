@@ -28,6 +28,7 @@ const S = {
 
 type MachineNodeWidgetProps = {
   engine: DiagramEngine,
+  portLinks: string[],
   isSelected: boolean,
   machineName: string,
   label: string,
@@ -93,6 +94,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
   return (
     prev.isSelected === next.isSelected &&
     prev.selectedRecipe === next.selectedRecipe &&
-    prev.machineName === next.machineName
+    prev.machineName === next.machineName &&
+    prev.portLinks.length === next.portLinks.length
   );
 });

@@ -1,4 +1,4 @@
-import { NodeModel } from '@projectstorm/react-diagrams';
+import { NodeModel, DefaultLinkModel } from '@projectstorm/react-diagrams';
 
 import { MachinePortModel } from './MachinePortModel';
 import { MachineCategory, findCategoryForMachine, MachineRecipe, getRecipesForMachine, Recipe, findRecipeByName } from '../../data';
@@ -14,13 +14,16 @@ export class MachineNodeModel extends NodeModel {
   private _resultPorts: MachinePortModel[] = [];
 
   get machineName(): string { return this._machineName }
-
   get selectedRecipe(): Recipe | null { return this._selectedRecipe }
-
   get recipes(): MachineRecipe[] { return this._recipes }
   get machineCategory(): MachineCategory { return this._machineCategory }
   get ingredientPorts(): MachinePortModel[] { return this._ingredientPorts }
   get resultPorts(): MachinePortModel[] { return this._resultPorts }
+  get portLinks(): string[] {
+    return Object.keys(this.ports).reduce((portLinks: string[], port) => {
+      return [...portLinks, ...Object.keys(this.ports[port].links)];
+    }, []);
+  }
 
   constructor(machineName: string) {
     super({
