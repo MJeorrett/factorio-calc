@@ -2,13 +2,17 @@ import React from 'react';
 import { DiagramEngine } from '@projectstorm/react-diagrams';
 import styled from '@emotion/styled';
 
-import {  Recipe } from '../../data';
+import { Recipe, MachineRecipe } from '../../data';
 import { MachineWidgetBase } from '../MachineWidgetBase';
 
 import { MachinePortWidget } from './MachinePortWidget';
 import { MachinePortModel } from './MachinePortModel';
+import { MachineNodeWidgetControls } from './MachineNodeWidgetControls';
 
 const S = {
+  Root: styled.div`
+    background: #eeffdd;
+  `,
   Ports: styled.div`
     border-top: 1px solid darkolivegreen;
     display: flex;
@@ -24,26 +28,35 @@ const S = {
 
 type MachineNodeWidgetProps = {
   engine: DiagramEngine,
-  selectedRecipe: Recipe | null,
   isSelected: boolean,
   machineName: string,
   label: string,
   ingredientPorts: MachinePortModel[],
   resultPorts: MachinePortModel[],
+  machineNames: string[],
+  recipes: MachineRecipe[],
+  selectedRecipe: Recipe | null,
+  handleSelectMachine: (event: React.FormEvent) => void,
+  handleSelectRecipe: (event: React.FormEvent) => void,
 };
 
 export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo(({
   engine,
   isSelected,
+  machineNames,
   machineName,
   label,
+  recipes,
+  selectedRecipe,
   ingredientPorts,
   resultPorts,
+  handleSelectMachine,
+  handleSelectRecipe,
 }) => {
   const anyPorts = ingredientPorts.length + resultPorts.length > 0;
 
   return (
-    <>
+    <S.Root>
       <MachineWidgetBase
         iconName={machineName}
         isSelected={isSelected}
@@ -65,7 +78,16 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
           </S.Ports>
         )}
       </MachineWidgetBase>
-    </>
+      <MachineNodeWidgetControls
+        isSelected={isSelected}
+        machineNames={machineNames}
+        selectedMachineName={machineName}
+        recipes={recipes}
+        selectedRecipe={selectedRecipe}
+        onSelectMachine={handleSelectMachine}
+        onSelectRecipe={handleSelectRecipe}
+      />
+    </S.Root>
   );
 }, (prev, next) => {
   return (
