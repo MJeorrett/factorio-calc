@@ -1,5 +1,4 @@
 import React from 'react';
-import { DiagramEngine } from '@projectstorm/react-diagrams';
 import styled from '@emotion/styled';
 
 import { getLabel, Recipe, MachineRecipe } from '../../data';
@@ -33,46 +32,32 @@ const S = {
 };
 
 type MachineNodeWidgetProps = {
-  engine: DiagramEngine,
   isSelected: boolean,
   machineNames: string[],
   selectedMachineName: string,
   recipes: MachineRecipe[],
   selectedRecipe: Recipe | null,
-  setMachineName: (machineName: string) => void,
-  setSelectedRecipeName: (recipeName: string) => void,
+  onSelectMachine: (event: React.FormEvent) => void,
+  onSelectRecipe: (event: React.FormEvent) => void,
 };
 
 export const MachineNodeWidgetControls: React.SFC<MachineNodeWidgetProps> = ({
-  engine,
   isSelected,
   machineNames,
   selectedMachineName,
   recipes,
   selectedRecipe,
-  setMachineName,
-  setSelectedRecipeName,
+  onSelectMachine,
+  onSelectRecipe,
 }) => {
-  const handleTypeSelect = (event: React.FormEvent) => {
-    const selectElement = event.target as HTMLSelectElement;
-    setMachineName(selectElement.value);
-    engine.repaintCanvas();
-  };
-
-  const handleRecipeSelect = (event: React.FormEvent) => {
-    const selectElement = event.target as HTMLSelectElement;
-    setSelectedRecipeName(selectElement.value);
-    engine.repaintCanvas();
-  };
-
   return (
     <S.Root isOpen={isSelected}>
-      <S.ControlDropdown isOpen={isSelected} value={selectedMachineName} onChange={handleTypeSelect}>
+      <S.ControlDropdown isOpen={isSelected} value={selectedMachineName} onChange={onSelectMachine}>
         {machineNames.map(machineName => (
           <option key={machineName} value={machineName}>{getLabel(machineName)}</option>
         ))}
       </S.ControlDropdown>
-      <S.ControlDropdown isOpen={isSelected} value={selectedRecipe ? selectedRecipe.name : ''} onChange={handleRecipeSelect}>
+      <S.ControlDropdown isOpen={isSelected} value={selectedRecipe ? selectedRecipe.name : ''} onChange={onSelectRecipe}>
         <option value="">-- Select Recipe --</option>
         {recipes.map(recipe => (
           <option key={recipe.name} value={recipe.name}>{recipe.label}</option>

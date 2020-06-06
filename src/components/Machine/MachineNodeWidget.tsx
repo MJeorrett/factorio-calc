@@ -2,16 +2,13 @@ import React from 'react';
 import { DiagramEngine } from '@projectstorm/react-diagrams';
 import styled from '@emotion/styled';
 
-import {  Recipe, MachineCategory, MachineRecipe } from '../../data';
+import {  Recipe } from '../../data';
 import { MachineWidgetBase } from '../MachineWidgetBase';
 
 import { MachinePortWidget } from './MachinePortWidget';
 import { MachinePortModel } from './MachinePortModel';
-import { MachineNodeWidgetControls } from './MachineNodeWidgetControls';
 
 const S = {
-  Root: styled.div`
-  `,
   Ports: styled.div`
     border-top: 1px solid darkolivegreen;
     display: flex;
@@ -27,35 +24,26 @@ const S = {
 
 type MachineNodeWidgetProps = {
   engine: DiagramEngine,
-  recipes: MachineRecipe[],
   selectedRecipe: Recipe | null,
   isSelected: boolean,
   machineName: string,
   label: string,
-  machineCategory: MachineCategory,
   ingredientPorts: MachinePortModel[],
   resultPorts: MachinePortModel[],
-  setMachineName: (machineName: string) => void,
-  setSelectedRecipeName: (recipeName: string) => void,
 };
 
 export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo(({
   engine,
   isSelected,
   machineName,
-  machineCategory,
   label,
-  recipes,
-  selectedRecipe,
   ingredientPorts,
   resultPorts,
-  setMachineName,
-  setSelectedRecipeName,
 }) => {
   const anyPorts = ingredientPorts.length + resultPorts.length > 0;
 
   return (
-    <S.Root>
+    <>
       <MachineWidgetBase
         iconName={machineName}
         isSelected={isSelected}
@@ -77,17 +65,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
           </S.Ports>
         )}
       </MachineWidgetBase>
-      <MachineNodeWidgetControls
-        engine={engine}
-        isSelected={isSelected}
-        machineNames={machineCategory.machineNames}
-        selectedMachineName={machineName}
-        recipes={recipes}
-        selectedRecipe={selectedRecipe}
-        setMachineName={setMachineName}
-        setSelectedRecipeName={setSelectedRecipeName}
-      />
-    </S.Root>
+    </>
   );
 }, (prev, next) => {
   return (
