@@ -36,6 +36,7 @@ export const MachineNodeWidgetContainer: React.SFC<MachineNodeWidgetContainerPro
         selectedRecipe={node.selectedRecipe}
         ingredientPorts={node.ingredientPorts}
         resultPorts={node.resultPorts}
+        redrawCount={node.redrawCount}
         handleSelectMachine={handleSelectMachine}
         handleSelectRecipe={handleSelectRecipe}
       />

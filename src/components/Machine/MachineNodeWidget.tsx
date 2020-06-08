@@ -36,6 +36,7 @@ type MachineNodeWidgetProps = {
   resultPorts: MachinePortModel[],
   machineNames: string[],
   selectedRecipe: Recipe | null,
+  redrawCount: number,
   handleSelectMachine: (event: React.FormEvent) => void,
   handleSelectRecipe: (event: React.FormEvent) => void,
 };
@@ -92,6 +93,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
     prev.isSelected === next.isSelected &&
     prev.selectedRecipe === next.selectedRecipe &&
     prev.machine.name === next.machine.name &&
-    prev.portLinks.length === next.portLinks.length
+    prev.portLinks.length === next.portLinks.length &&
+    prev.redrawCount === next.redrawCount
   );
 });

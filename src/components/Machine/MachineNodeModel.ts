@@ -12,6 +12,7 @@ export class MachineNodeModel extends NodeModel {
   private _selectedRecipe: Recipe | null = null;
   private _ingredientPorts: MachinePortModel[] = [];
   private _resultPorts: MachinePortModel[] = [];
+  private _redrawCount: number = 0;
 
   private get _allPorts(): MachinePortModel[] { return [...this._ingredientPorts, ...this._resultPorts] }
 
@@ -20,6 +21,7 @@ export class MachineNodeModel extends NodeModel {
   get machineCategory(): MachineCategory { return this._machineCategory }
   get ingredientPorts(): MachinePortModel[] { return this._ingredientPorts }
   get resultPorts(): MachinePortModel[] { return this._resultPorts }
+  get redrawCount(): number { return this._redrawCount }
 
   get portLinks(): string[] {
     return Object.keys(this.ports).reduce((portLinks: string[], port) => {
@@ -46,13 +48,21 @@ export class MachineNodeModel extends NodeModel {
     });
   }
 
+  markDirty() {
+    this._redrawCount++;
+  }
+
   setMachineName = (value: string) => {
+    this._redrawCount++;
     this._machine = getMachine(this._machineCategory.configKey, value);
 
     if (this._selectedRecipe === null) return;
 
+    const craftsPerSecond = 1 / (this._selectedRecipe.craftingTime / this._machine.craftingSpeed);
+
     if (this._machine.recipes.find(r => r.name === (this._selectedRecipe as Recipe).name)) {
       this.setSelectedRecipeName(this._selectedRecipe.name);
+      this._allPorts.map((port: MachinePortModel) => port.updateCraftsPerSecond(craftsPerSecond))
     }
     else {
       this.setSelectedRecipeName(null);
@@ -60,6 +70,7 @@ export class MachineNodeModel extends NodeModel {
   }
 
   setSelectedRecipeName = (recipeName: string | null) => {
+    this._redrawCount++;
     if (recipeName === null) {
       this.removeAllPorts();
       this._selectedRecipe = null;
@@ -77,19 +88,21 @@ export class MachineNodeModel extends NodeModel {
 
     const recipe = findRecipeByName(recipeName);
     this._selectedRecipe = recipe;
-    const craftsPerSecond = 1 / (recipe.craftingTime / this.machine.craftingSpeed);
+    const craftsPerSecond = 1 / (recipe.craftingTime / this._machine.craftingSpeed);
 
     recipe.ingredients.forEach(ingredient => {
       this.addPort(new MachinePortModel({
         itemName: ingredient.name,
-        itemsPerSecond: round(craftsPerSecond * ingredient.amount),
+        itemsPerCraft: ingredient.amount,
+        craftsPerSecond,
         isIngredient: true
       }));
     });
     recipe.results.forEach(result => {
       this.addPort(new MachinePortModel({
         itemName: result.name,
-        itemsPerSecond: round(craftsPerSecond * result.amount),
+        itemsPerCraft: result.amount,
+        craftsPerSecond,
         isIngredient: false,
       }));
     })

@@ -2,29 +2,33 @@ import { PortModel, PortModelAlignment, DefaultLinkModel, LinkModel, LinkModelGe
 
 import round from '../../utils/round';
 import { MachineLinkModel } from './MachineLinkModel';
+import { MachineNodeModel } from './MachineNodeModel';
 
 type MachinePortModelOptions = {
   itemName: string,
-  itemsPerSecond: number,
+  itemsPerCraft: number,
+  craftsPerSecond: number,
   isIngredient: boolean,
 }
 
 export class MachinePortModel extends PortModel {
   private _itemName: string;
   private _isIngredient: boolean;
-  private _itemsPerSecond: number;
+  private _itemsPerCraft: number;
+  private _craftsPerSecond: number;
   private _satisfaction: number = 0;
 
   private get _allLinks(): MachineLinkModel[] { return Object.keys(this.links).map(linkName => this.links[linkName] as MachineLinkModel) }
 
   get itemName(): string { return this._itemName }
   get isIngredient(): boolean { return this._isIngredient }
-  get itemsPerSecond(): number { return this._itemsPerSecond }
+  get itemsPerSecond(): number { return this._craftsPerSecond * this._itemsPerCraft }
   get satisfaction(): number { return this._satisfaction }
 
   constructor({
     itemName,
-    itemsPerSecond,
+    itemsPerCraft,
+    craftsPerSecond,
     isIngredient,
   }: MachinePortModelOptions) {
     super({
@@ -33,7 +37,8 @@ export class MachinePortModel extends PortModel {
     });
 
     this._itemName = itemName;
-    this._itemsPerSecond = itemsPerSecond;
+    this._itemsPerCraft = itemsPerCraft;
+    this._craftsPerSecond = craftsPerSecond;
     this._isIngredient = isIngredient;
   }
 
@@ -54,8 +59,8 @@ export class MachinePortModel extends PortModel {
       otherPort.parent !== this.parent;
   }
 
-  updateItemsPerSecond(itemsPerSecond: number) {
-    this._itemsPerSecond = itemsPerSecond;
+  updateCraftsPerSecond(craftsPerSecond: number) {
+    this._craftsPerSecond = craftsPerSecond;
     this.updateLinks();
   }
 
@@ -65,16 +70,17 @@ export class MachinePortModel extends PortModel {
       return total + link.itemsPerSecond;
     }, 0)
 
-    this._satisfaction = round(totalSupply / this._itemsPerSecond);
+    this._satisfaction = round(totalSupply / this.itemsPerSecond);
   }
 
   updateLinks() {
-    const itemsPerSecondPerLink = round(this._itemsPerSecond / this._allLinks.length);
+    const itemsPerSecondPerLink = round(this.itemsPerSecond / this._allLinks.length);
     this._allLinks.forEach(link => {
       const machineLink = link as MachineLinkModel;
       machineLink.updateItemsPerSecond(itemsPerSecondPerLink);
       const targetPort = machineLink.getTargetPort() as MachinePortModel;
       targetPort.updateSatisfaction();
+      (targetPort.parent as MachineNodeModel).markDirty();
     });
   }
 }
