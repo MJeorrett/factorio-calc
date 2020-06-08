@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { DiagramEngine, PortWidget } from '@projectstorm/react-diagrams';
 
+import { getLabel } from '../../data';
 import { Icon } from '../Icon';
 import { MachinePortModel } from './MachinePortModel';
 
@@ -53,7 +54,7 @@ export const MachinePortWidget: React.SFC<MachinePortWidgetProps> = ({
     <Icon
       itemOrRecipeName={itemName}
       size={25}
-      tooltipText={itemName}
+      tooltipText={getLabel(itemName)}
       tooltipPlacement={isIngredient ? 'left' : 'right'}
     />
   );
