@@ -1,5 +1,3 @@
-import { MachineConfigKey } from './itemsConfig';
-
 export type MachineCategory = {
   name: (
     'assembling-machine' |

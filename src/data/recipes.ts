@@ -1,4 +1,4 @@
-import itemsConfig, { resourceNames } from './itemsConfig';
+import itemsConfig from './itemsConfig';
 
 export type RecipeItem = {
   amount: number,

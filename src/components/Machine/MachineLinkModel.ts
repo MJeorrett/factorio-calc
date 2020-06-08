@@ -1,5 +1,4 @@
 import { DefaultLinkModel } from '@projectstorm/react-diagrams';
-import { MachinePortModel } from './MachinePortModel';
 
 export class MachineLinkModel extends DefaultLinkModel {
   private _itemsPerSecond: number = 0;
