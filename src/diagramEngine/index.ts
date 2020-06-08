@@ -1,6 +1,8 @@
 import createEngine, { DefaultDiagramState, DiagramModel } from '@projectstorm/react-diagrams';
 
-import { MachineNodeFactory } from './components';
+import { MachineNodeFactory } from '../components';
+
+import { startListening } from './listenLogic';
 
 export const diagramEngine = createEngine();
 
@@ -19,3 +21,5 @@ nodeFactories.registerFactory(new MachineNodeFactory());
 const model = new DiagramModel();
 
 diagramEngine.setModel(model);
+
+startListening(diagramEngine);

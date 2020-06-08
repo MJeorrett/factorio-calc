@@ -1,4 +1,6 @@
-import { PortModel, PortModelAlignment, DefaultLinkModel } from '@projectstorm/react-diagrams';
+import { PortModel, PortModelAlignment, DefaultLinkModel, LinkModel, LinkModelGenerics } from '@projectstorm/react-diagrams';
+
+import round from '../../utils/round';
 
 type MachinePortModelOptions = {
   itemName: string,
@@ -14,6 +16,7 @@ export class MachinePortModel extends PortModel {
   get itemName(): string { return this._itemName }
   get isIngredient(): boolean { return this._isIngredient }
   get itemsPerSecond(): number { return this._itemsPerSecond }
+  private get _allLinks(): DefaultLinkModel[] { return Object.keys(this.links).map(linkName => this.links[linkName] as DefaultLinkModel) }
 
   constructor({
     itemName,
@@ -45,5 +48,20 @@ export class MachinePortModel extends PortModel {
     return otherPort.isIngredient &&
       this._itemName === otherPort._itemName &&
       otherPort.parent !== this.parent;
+  }
+
+  updateItemsPerSecond(itemsPerSecond: number) {
+    this._itemsPerSecond = itemsPerSecond;
+    this.updateLinks();
+  }
+
+  updateLinks() {
+    const itemsPerSecondPerLink = this._itemsPerSecond / this._allLinks.length;
+    this._allLinks.forEach((link: any) => {
+      if (link.labels.length === 0) {
+        link.addLabel('');
+      }
+      link.labels[0].options.label = `${round(itemsPerSecondPerLink)} \\s`;
+    });
   }
 }

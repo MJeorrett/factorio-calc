@@ -2,6 +2,7 @@ import { NodeModel, DefaultLinkModel } from '@projectstorm/react-diagrams';
 
 import { MachinePortModel } from './MachinePortModel';
 import { MachineCategory, findCategoryForMachine, MachineRecipe, getMachine, Recipe, findRecipeByName, Machine } from '../../data';
+import round from '../../utils/round';
 
 export class MachineNodeModel extends NodeModel {
   static type = 'machine';
@@ -17,6 +18,8 @@ export class MachineNodeModel extends NodeModel {
   get machineCategory(): MachineCategory { return this._machineCategory }
   get ingredientPorts(): MachinePortModel[] { return this._ingredientPorts }
   get resultPorts(): MachinePortModel[] { return this._resultPorts }
+  private get _allPorts(): MachinePortModel[] { return [...this._ingredientPorts, ...this._resultPorts] }
+
   get portLinks(): string[] {
     return Object.keys(this.ports).reduce((portLinks: string[], port) => {
       return [...portLinks, ...Object.keys(this.ports[port].links)];
@@ -45,18 +48,31 @@ export class MachineNodeModel extends NodeModel {
   setMachineName = (value: string) => {
     this._machine = getMachine(this._machineCategory.configKey, value);
 
-    if (this._selectedRecipe) {
+    if (this._selectedRecipe === null) return;
+
+    if (this._machine.recipes.find(r => r.name === (this._selectedRecipe as Recipe).name)) {
       this.setSelectedRecipeName(this._selectedRecipe.name);
+    }
+    else {
+      this.setSelectedRecipeName(null);
     }
   }
 
   setSelectedRecipeName = (recipeName: string | null) => {
-    this.removeAllPorts();
-    
     if (recipeName === null) {
+      this.removeAllPorts();
       this._selectedRecipe = null;
       return;
     }
+
+    if (recipeName === this.selectedRecipe?.name) {
+      this._allPorts.forEach(port => {
+        port.updateLinks();
+      });
+      return;
+    }
+
+    this.removeAllPorts();
 
     const recipe = findRecipeByName(recipeName);
     this._selectedRecipe = recipe;
@@ -65,14 +81,14 @@ export class MachineNodeModel extends NodeModel {
     recipe.ingredients.forEach(ingredient => {
       this.addPort(new MachinePortModel({
         itemName: ingredient.name,
-        itemsPerSecond: craftsPerSecond * ingredient.amount,
+        itemsPerSecond: round(craftsPerSecond * ingredient.amount),
         isIngredient: true
       }));
     });
     recipe.results.forEach(result => {
       this.addPort(new MachinePortModel({
         itemName: result.name,
-        itemsPerSecond: craftsPerSecond * result.amount,
+        itemsPerSecond: round(craftsPerSecond * result.amount),
         isIngredient: false,
       }));
     })
