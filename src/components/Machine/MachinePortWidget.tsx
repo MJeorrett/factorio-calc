@@ -9,8 +9,9 @@ import { MachinePortModel } from './MachinePortModel';
 const portSize = '12px';
 const portColor = 'darkolivegreen';
 
-type SPortProps = {
+type SPortWidgetProps = {
   isConnected: boolean;
+  satisfaction: number;
 };
 
 const S = {
@@ -21,10 +22,19 @@ const S = {
       margin-right: 0.5em;
     }
   `,
-  PortWidget: styled(PortWidget)<SPortProps>`
+  PortWidget: styled(PortWidget)<SPortWidgetProps>`
     align-self: center;
-    background: ${p => p.isConnected ? portColor: 'white'};
+    background: ${p => !p.isConnected ?
+      'white' :
+      (p.satisfaction < 1 ?
+        'orange' :
+        portColor)};
     border: 1px solid ${portColor};
+    border-color: ${p => p.satisfaction === 0 ?
+      'red' :
+      (p.satisfaction < 1 ?
+        'orange' :
+        portColor)};
     border-radius: calc(${portSize} / 2);
     cursor: pointer;
     display: inline-block;
@@ -68,9 +78,9 @@ export const MachinePortWidget: React.SFC<MachinePortWidgetProps> = ({
         port={port}
         engine={engine}
         isConnected={Object.keys(links).length > 0}
+        satisfaction={isIngredient ? satisfaction : 1}
       />
       {isIngredient && renderIcon()}
-      {satisfaction}
     </S.Root>
   );
 };
