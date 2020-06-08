@@ -1,8 +1,9 @@
-import itemsConfig from './itemsConfig';
+import itemsConfig, { resourceNames } from './itemsConfig';
 
 export type RecipeItem = {
   amount: number,
   name: string,
+  isResource: boolean,
 };
 
 export type Recipe = {
@@ -19,8 +20,18 @@ export const allRecipes: Recipe[] = Object.keys(itemsConfig.recipes).map(recipeN
     name: recipeName,
     category: recipeConfig.category,
     craftingTime: recipeConfig.energy_required,
-    ingredients: recipeConfig.ingredients,
-    results: recipeConfig.results,
+    ingredients: recipeConfig.ingredients
+      .map(ingredient => ({
+        ...ingredient,
+        isResource: ['water', 'crude-oil'].includes(ingredient.name) ||
+          (itemsConfig.items[ingredient.name]?.subgroup ?
+            itemsConfig.items[ingredient.name]?.subgroup === 'raw-resource':
+            false),
+      })),
+    results: recipeConfig.results.map(result => ({
+      ...result,
+      isResource: false,
+    })),
   };
 });
 

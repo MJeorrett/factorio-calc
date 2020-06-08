@@ -95,7 +95,8 @@ export class MachineNodeModel extends NodeModel {
         itemName: ingredient.name,
         itemsPerCraft: ingredient.amount,
         craftsPerSecond,
-        isIngredient: true
+        isIngredient: true,
+        isResource: ingredient.isResource,
       }));
     });
     recipe.results.forEach(result => {
@@ -104,13 +105,20 @@ export class MachineNodeModel extends NodeModel {
         itemsPerCraft: result.amount,
         craftsPerSecond,
         isIngredient: false,
+        isResource: false,
       }));
-    })
+      this._ingredientPorts.reverse();
+    });
   }
 
   addPort(port: MachinePortModel) {
     if (port.isIngredient) {
-      this._ingredientPorts.push(port);
+      if (port.isResource) {
+        this._ingredientPorts.unshift(port)
+      }
+      else {
+        this._ingredientPorts.push(port);
+      }
     }
     else {
       this._resultPorts.push(port);

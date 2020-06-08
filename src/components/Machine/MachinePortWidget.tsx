@@ -12,6 +12,7 @@ const portColor = 'darkolivegreen';
 type SPortWidgetProps = {
   isConnected: boolean;
   satisfaction: number;
+  isResource: boolean;
 };
 
 const S = {
@@ -37,7 +38,7 @@ const S = {
         portColor)};
     border-radius: calc(${portSize} / 2);
     cursor: pointer;
-    display: inline-block;
+    display: ${p => p.isResource ? 'none' : 'inline-block'};
     height: ${portSize};
     width: ${portSize};
     :hover {
@@ -57,6 +58,7 @@ export const MachinePortWidget: React.SFC<MachinePortWidgetProps> = ({
   port: {
     itemName,
     isIngredient,
+    isResource,
     links,
     itemsPerSecond,
     satisfaction,
@@ -78,6 +80,7 @@ export const MachinePortWidget: React.SFC<MachinePortWidgetProps> = ({
         port={port}
         engine={engine}
         isConnected={Object.keys(links).length > 0}
+        isResource={isResource}
         satisfaction={isIngredient ? satisfaction : 1}
       />
       {isIngredient && renderIcon()}

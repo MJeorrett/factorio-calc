@@ -9,11 +9,13 @@ type MachinePortModelOptions = {
   itemsPerCraft: number,
   craftsPerSecond: number,
   isIngredient: boolean,
+  isResource: boolean,
 }
 
 export class MachinePortModel extends PortModel {
   private _itemName: string;
   private _isIngredient: boolean;
+  private _isResource: boolean;
   private _itemsPerCraft: number;
   private _craftsPerSecond: number;
   private _satisfaction: number = 0;
@@ -22,6 +24,7 @@ export class MachinePortModel extends PortModel {
 
   get itemName(): string { return this._itemName }
   get isIngredient(): boolean { return this._isIngredient }
+  get isResource(): boolean { return this._isResource }
   get itemsPerSecond(): number { return this._craftsPerSecond * this._itemsPerCraft }
   get satisfaction(): number { return this._satisfaction }
 
@@ -30,6 +33,7 @@ export class MachinePortModel extends PortModel {
     itemsPerCraft,
     craftsPerSecond,
     isIngredient,
+    isResource,
   }: MachinePortModelOptions) {
     super({
       name: isIngredient ? `input-${itemName}` : `output-${itemName}`,
@@ -40,6 +44,7 @@ export class MachinePortModel extends PortModel {
     this._itemsPerCraft = itemsPerCraft;
     this._craftsPerSecond = craftsPerSecond;
     this._isIngredient = isIngredient;
+    this._isResource = isResource;
   }
 
   createLinkModel() {

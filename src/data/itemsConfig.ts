@@ -6,6 +6,7 @@ export interface ItemConfigBase {
   localized_name?: {
     en: string,
   },
+  subgroup?: string,
 };
 
 interface RecipeItem {
@@ -28,15 +29,19 @@ export interface MachineConfig extends ItemConfigBase {
 
 export interface ItemsConfig {
   [k: string]: ItemConfigBase | undefined,
-};
+}
 
 export interface MachinesConfig {
   [k: string]: MachineConfig | undefined,
-};
+}
 
 export interface RecipesConfig {
   [k: string]: RecipeConfig,
-};
+}
+
+interface ResourceConfig {
+  [k: string]: any,
+}
 
 export type MachineConfigKey = 'assembling-machine' | 'furnace';
 
@@ -45,6 +50,7 @@ export interface RootItemsConfig {
   'furnace': MachinesConfig,
   items: ItemsConfig,
   recipes: RecipesConfig,
+  resource: ResourceConfig
 };
 
 const itemsConfig = rawItemsConfig as RootItemsConfig;
@@ -52,5 +58,7 @@ const itemsConfig = rawItemsConfig as RootItemsConfig;
 export const allRecipes = Object.keys(itemsConfig.recipes).map(recipeName => (
   itemsConfig.recipes[recipeName]
 ));
+
+export const resourceNames = Object.keys(itemsConfig.resource);
 
 export default itemsConfig;
