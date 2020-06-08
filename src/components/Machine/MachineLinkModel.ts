@@ -1,5 +1,7 @@
 import { DefaultLinkModel } from '@projectstorm/react-diagrams';
 
+import round from '../../utils/round';
+
 export class MachineLinkModel extends DefaultLinkModel {
   private _itemsPerSecond: number = 0;
 
@@ -13,6 +15,6 @@ export class MachineLinkModel extends DefaultLinkModel {
     }
 
     const label = this.labels[0] as any;
-    label.options.label = `${itemsPerSecond} \\s`;
+    label.options.label = `${round(itemsPerSecond)} \\s`;
   }
 }

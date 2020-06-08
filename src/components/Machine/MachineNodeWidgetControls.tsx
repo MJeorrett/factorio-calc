@@ -91,7 +91,7 @@ export const MachineNodeWidgetControls: React.SFC<MachineNodeWidgetProps> = ({
     children,
   }) => {
     return (
-      <Tooltip title={machineCount + delta} placement="top">
+      <Tooltip title={`${machineCount} > ${machineCount + delta}`} placement="top">
         <S.ControlButton
           type="button"
           disabled={delta < 0 && (delta * -1) >= machineCount}
