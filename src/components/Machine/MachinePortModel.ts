@@ -85,14 +85,27 @@ export class MachinePortModel extends PortModel {
   }
 
   updateLinks() {
-    const itemsPerSecondPerLink = round(this.itemsPerSecond / this._allLinks.length);
     const resultLinks = this._allLinks.filter(link => link.getSourcePort() === this);
+    const totalRequestedItemsPerSecond = resultLinks.reduce((total, link) => {
+      const targetPort = link.getTargetPort() as MachinePortModel;
+      return total + targetPort.itemsPerSecond;
+    }, 0);
+    const percentageLinkSatisfaction = Math.min(1, this.itemsPerSecond / totalRequestedItemsPerSecond);
     resultLinks.forEach(link => {
       const machineLink = link as MachineLinkModel;
-      machineLink.updateItemsPerSecond(itemsPerSecondPerLink);
       const targetPort = machineLink.getTargetPort() as MachinePortModel;
+
+      const linkItemsPerSecond = round(percentageLinkSatisfaction * targetPort.itemsPerSecond);
+      machineLink.updateItemsPerSecond(linkItemsPerSecond);
+
       targetPort.updateSatisfaction();
       (targetPort.parent as MachineNodeModel).markDirty();
+    });
+
+    const ingredientLinks = this._allLinks.filter(link => link.getTargetPort() === this);
+    ingredientLinks.forEach(link => {
+      const targetPort = link.getSourcePort() as MachinePortModel;
+      targetPort.updateLinks();
     });
   }
 }
