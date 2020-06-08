@@ -1,6 +1,7 @@
 import { PortModel, PortModelAlignment, DefaultLinkModel, LinkModel, LinkModelGenerics } from '@projectstorm/react-diagrams';
 
 import round from '../../utils/round';
+import { MachineLinkModel } from './MachineLinkModel';
 
 type MachinePortModelOptions = {
   itemName: string,
@@ -36,7 +37,7 @@ export class MachinePortModel extends PortModel {
   createLinkModel() {
     if (this._isIngredient) return null;
 
-    const link = new DefaultLinkModel({
+    const link = new MachineLinkModel({
       color: 'darkolivegreen',
       selectedColor: 'darkolivegreen',
     });
@@ -57,11 +58,8 @@ export class MachinePortModel extends PortModel {
 
   updateLinks() {
     const itemsPerSecondPerLink = this._itemsPerSecond / this._allLinks.length;
-    this._allLinks.forEach((link: any) => {
-      if (link.labels.length === 0) {
-        link.addLabel('');
-      }
-      link.labels[0].options.label = `${round(itemsPerSecondPerLink)} \\s`;
+    this._allLinks.forEach(link => {
+      (link as MachineLinkModel).updateItemsPerSecond(itemsPerSecondPerLink);
     });
   }
 }
