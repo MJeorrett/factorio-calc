@@ -52,11 +52,13 @@ export const MachineNodeWidgetControls: React.SFC<MachineNodeWidgetProps> = ({
 }) => {
   return (
     <S.Root isOpen={isSelected}>
-      <S.ControlDropdown isOpen={isSelected} value={selectedMachineName} onChange={onSelectMachine}>
-        {machineNames.map(machineName => (
-          <option key={machineName} value={machineName}>{getLabel(machineName)}</option>
-        ))}
-      </S.ControlDropdown>
+      {machineNames.length > 1 && (
+        <S.ControlDropdown isOpen={isSelected} value={selectedMachineName} onChange={onSelectMachine}>
+          {machineNames.map(machineName => (
+            <option key={machineName} value={machineName}>{getLabel(machineName)}</option>
+          ))}
+        </S.ControlDropdown>
+      )}
       <S.ControlDropdown isOpen={isSelected} value={selectedRecipe ? selectedRecipe.name : ''} onChange={onSelectRecipe}>
         <option value="">-- Select Recipe --</option>
         {recipes.map(recipe => (

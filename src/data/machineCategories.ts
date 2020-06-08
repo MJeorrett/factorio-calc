@@ -1,5 +1,12 @@
+import { MachineConfigKey } from './itemsConfig';
+
 export type MachineCategory = {
-  name: 'assembling-machine' | 'furnace',
+  name: (
+    'assembling-machine' |
+    'furnace' |
+    'chemical-plant' |
+    'oil-refinery'
+  ),
   label: string,
   configKey: 'assembling-machine' | 'furnace',
   machineNames: string[],
@@ -17,6 +24,24 @@ export const machineCategories: MachineCategory[] = [
       'assembling-machine-3',
     ],
     defaultMachine: 'assembling-machine-3',
+  },
+  {
+    name: 'oil-refinery',
+    label: 'Oil Refinary',
+    configKey: 'assembling-machine',
+    machineNames: [
+      'oil-refinery',
+    ],
+    defaultMachine: 'oil-refinery',
+  },
+  {
+    name: 'chemical-plant',
+    label: 'Chemical Plant',
+    configKey: 'assembling-machine',
+    machineNames: [
+      'chemical-plant',
+    ],
+    defaultMachine: 'chemical-plant',
   },
   {
     name: 'furnace',
