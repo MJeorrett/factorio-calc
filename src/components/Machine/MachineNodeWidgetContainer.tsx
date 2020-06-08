@@ -17,13 +17,18 @@ export const MachineNodeWidgetContainer: React.SFC<MachineNodeWidgetContainerPro
     const selectElement = event.target as HTMLSelectElement;
     node.setMachineName(selectElement.value);
     engine.repaintCanvas();
-  }, []);
+  }, [engine, node]);
 
   const handleSelectRecipe = useMemo(() => (event: React.FormEvent) => {
     const selectElement = event.target as HTMLSelectElement;
     node.setSelectedRecipeName(selectElement.value);
     engine.repaintCanvas();
-  }, []);
+  }, [engine, node]);
+
+  const handleSetMachineCount = useMemo(() => (count: number) => {
+    node.setMachineCount(count);
+    engine.repaintCanvas();
+  }, [engine, node]);
 
   return (
     <>
@@ -33,12 +38,14 @@ export const MachineNodeWidgetContainer: React.SFC<MachineNodeWidgetContainerPro
         isSelected={node.isSelected()}
         machineNames={node.machineCategory.machineNames}
         machine={node.machine}
+        machineCount={node.machineCount}
         selectedRecipe={node.selectedRecipe}
         ingredientPorts={node.ingredientPorts}
         resultPorts={node.resultPorts}
         redrawCount={node.redrawCount}
         handleSelectMachine={handleSelectMachine}
         handleSelectRecipe={handleSelectRecipe}
+        handleSetMachineCount={handleSetMachineCount}
       />
     </>
   );

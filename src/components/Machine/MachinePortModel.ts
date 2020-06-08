@@ -1,4 +1,4 @@
-import { PortModel, PortModelAlignment, DefaultLinkModel, LinkModel, LinkModelGenerics } from '@projectstorm/react-diagrams';
+import { PortModel, PortModelAlignment } from '@projectstorm/react-diagrams';
 
 import round from '../../utils/round';
 import { MachineLinkModel } from './MachineLinkModel';
@@ -66,6 +66,12 @@ export class MachinePortModel extends PortModel {
 
   updateCraftsPerSecond(craftsPerSecond: number) {
     this._craftsPerSecond = craftsPerSecond;
+    this.updateSatisfaction();
+    this.updateLinks();
+  }
+
+  updateTiming() {
+    this.updateSatisfaction();
     this.updateLinks();
   }
 
@@ -80,7 +86,8 @@ export class MachinePortModel extends PortModel {
 
   updateLinks() {
     const itemsPerSecondPerLink = round(this.itemsPerSecond / this._allLinks.length);
-    this._allLinks.forEach(link => {
+    const resultLinks = this._allLinks.filter(link => link.getSourcePort() === this);
+    resultLinks.forEach(link => {
       const machineLink = link as MachineLinkModel;
       machineLink.updateItemsPerSecond(itemsPerSecondPerLink);
       const targetPort = machineLink.getTargetPort() as MachinePortModel;

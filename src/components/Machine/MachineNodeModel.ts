@@ -1,22 +1,27 @@
-import { NodeModel, DefaultLinkModel } from '@projectstorm/react-diagrams';
+import { NodeModel } from '@projectstorm/react-diagrams';
 
 import { MachinePortModel } from './MachinePortModel';
-import { MachineCategory, findCategoryForMachine, MachineRecipe, getMachine, Recipe, findRecipeByName, Machine } from '../../data';
-import round from '../../utils/round';
+import { MachineCategory, findCategoryForMachine, getMachine, Recipe, findRecipeByName, Machine } from '../../data';
 
 export class MachineNodeModel extends NodeModel {
   static type = 'machine';
 
   private _machineCategory: MachineCategory;
   private _machine: Machine;
+  private _machineCount: number = 1;
   private _selectedRecipe: Recipe | null = null;
   private _ingredientPorts: MachinePortModel[] = [];
   private _resultPorts: MachinePortModel[] = [];
   private _redrawCount: number = 0;
 
   private get _allPorts(): MachinePortModel[] { return [...this._ingredientPorts, ...this._resultPorts] }
+  private get _craftsPerSecond(): number {
+    if (this._selectedRecipe === null) return -1;
+    return (1 / (this._selectedRecipe.craftingTime / this._machine.craftingSpeed)) * this._machineCount;
+  }
 
   get machine(): Machine { return this._machine }
+  get machineCount(): number { return this._machineCount }
   get selectedRecipe(): Recipe | null { return this._selectedRecipe }
   get machineCategory(): MachineCategory { return this._machineCategory }
   get ingredientPorts(): MachinePortModel[] { return this._ingredientPorts }
@@ -52,35 +57,34 @@ export class MachineNodeModel extends NodeModel {
     this._redrawCount++;
   }
 
+  updatePortsCraftsPerSecond() {
+    this._allPorts.forEach(port => {
+      port.updateCraftsPerSecond(this._craftsPerSecond);
+    });
+    this.markDirty();
+  }
+
   setMachineName = (value: string) => {
-    this._redrawCount++;
     this._machine = getMachine(this._machineCategory.configKey, value);
 
     if (this._selectedRecipe === null) return;
 
-    const craftsPerSecond = 1 / (this._selectedRecipe.craftingTime / this._machine.craftingSpeed);
-
-    if (this._machine.recipes.find(r => r.name === (this._selectedRecipe as Recipe).name)) {
-      this.setSelectedRecipeName(this._selectedRecipe.name);
-      this._allPorts.map((port: MachinePortModel) => port.updateCraftsPerSecond(craftsPerSecond))
-    }
-    else {
+    if (!this._machine.recipes.find(r => r.name === (this._selectedRecipe as Recipe).name)) {
       this.setSelectedRecipeName(null);
     }
+
+    this.updatePortsCraftsPerSecond();
+  }
+
+  setMachineCount = (count: number) => {
+    this._machineCount = count;
+    this.updatePortsCraftsPerSecond();
   }
 
   setSelectedRecipeName = (recipeName: string | null) => {
-    this._redrawCount++;
     if (recipeName === null) {
       this.removeAllPorts();
       this._selectedRecipe = null;
-      return;
-    }
-
-    if (recipeName === this.selectedRecipe?.name) {
-      this._allPorts.forEach(port => {
-        port.updateLinks();
-      });
       return;
     }
 
@@ -88,13 +92,12 @@ export class MachineNodeModel extends NodeModel {
 
     const recipe = findRecipeByName(recipeName);
     this._selectedRecipe = recipe;
-    const craftsPerSecond = 1 / (recipe.craftingTime / this._machine.craftingSpeed);
 
     recipe.ingredients.forEach(ingredient => {
       this.addPort(new MachinePortModel({
         itemName: ingredient.name,
         itemsPerCraft: ingredient.amount,
-        craftsPerSecond,
+        craftsPerSecond: this._craftsPerSecond,
         isIngredient: true,
         isResource: ingredient.isResource,
       }));
@@ -103,12 +106,14 @@ export class MachineNodeModel extends NodeModel {
       this.addPort(new MachinePortModel({
         itemName: result.name,
         itemsPerCraft: result.amount,
-        craftsPerSecond,
+        craftsPerSecond: this._craftsPerSecond,
         isIngredient: false,
         isResource: false,
       }));
       this._ingredientPorts.reverse();
     });
+
+    this.markDirty();
   }
 
   addPort(port: MachinePortModel) {

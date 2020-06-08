@@ -32,6 +32,7 @@ type MachineNodeWidgetProps = {
   portLinks: string[],
   isSelected: boolean,
   machine: Machine,
+  machineCount: number,
   ingredientPorts: MachinePortModel[],
   resultPorts: MachinePortModel[],
   machineNames: string[],
@@ -39,6 +40,7 @@ type MachineNodeWidgetProps = {
   redrawCount: number,
   handleSelectMachine: (event: React.FormEvent) => void,
   handleSelectRecipe: (event: React.FormEvent) => void,
+  handleSetMachineCount: (count: number) => void,
 };
 
 export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo(({
@@ -46,11 +48,13 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
   isSelected,
   machineNames,
   machine,
+  machineCount,
   selectedRecipe,
   ingredientPorts,
   resultPorts,
   handleSelectMachine,
   handleSelectRecipe,
+  handleSetMachineCount,
 }) => {
   const anyPorts = ingredientPorts.length + resultPorts.length > 0;
 
@@ -59,7 +63,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
       <MachineWidgetBase
         iconName={machine.name}
         isSelected={isSelected}
-        tooltipText={machine.label}
+        tooltipText={`${machine.label} x ${machineCount}`}
       >
         {anyPorts && (
           <S.Ports>
@@ -79,20 +83,20 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
       </MachineWidgetBase>
       <MachineNodeWidgetControls
         isSelected={isSelected}
+        machineCount={machineCount}
         machineNames={machineNames}
         selectedMachineName={machine.name}
         recipes={machine.recipes}
         selectedRecipe={selectedRecipe}
         onSelectMachine={handleSelectMachine}
         onSelectRecipe={handleSelectRecipe}
+        onSetMachineCount={handleSetMachineCount}
       />
     </S.Root>
   );
 }, (prev, next) => {
   return (
     prev.isSelected === next.isSelected &&
-    prev.selectedRecipe === next.selectedRecipe &&
-    prev.machine.name === next.machine.name &&
     prev.portLinks.length === next.portLinks.length &&
     prev.redrawCount === next.redrawCount
   );

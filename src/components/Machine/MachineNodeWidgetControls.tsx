@@ -33,25 +33,36 @@ const S = {
 
 type MachineNodeWidgetProps = {
   isSelected: boolean,
+  machineCount: number,
   machineNames: string[],
   selectedMachineName: string,
   recipes: MachineRecipe[],
   selectedRecipe: Recipe | null,
   onSelectMachine: (event: React.FormEvent) => void,
   onSelectRecipe: (event: React.FormEvent) => void,
+  onSetMachineCount: (count: number) => void,
 };
 
 export const MachineNodeWidgetControls: React.SFC<MachineNodeWidgetProps> = ({
   isSelected,
+  machineCount,
   machineNames,
   selectedMachineName,
   recipes,
   selectedRecipe,
   onSelectMachine,
   onSelectRecipe,
+  onSetMachineCount,
 }) => {
+  const createHandleIcrementMachineCount = (n: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    onSetMachineCount(machineCount + n);
+  };
+
   return (
     <S.Root isOpen={isSelected}>
+      {machineCount}
+      <button type="button" disabled={machineCount === 1} onClick={createHandleIcrementMachineCount(-1)}>-</button>
+      <button type="button" onClick={createHandleIcrementMachineCount(1)}>+</button>
       {machineNames.length > 1 && (
         <S.ControlDropdown isOpen={isSelected} value={selectedMachineName} onChange={onSelectMachine}>
           {machineNames.map(machineName => (

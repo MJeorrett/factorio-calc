@@ -13,8 +13,7 @@ const createHandleLinkEvent = (diagramEngine: DiagramEngine) => (event: any) => 
 
   if (!link.targetPort) return;
 
-  link.sourcePort.updateLinks();
-  link.targetPort.updateSatisfaction();
+  link.sourcePort.updateTiming();
   
   diagramEngine.repaintCanvas();
 }
