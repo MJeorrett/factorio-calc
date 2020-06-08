@@ -12,6 +12,7 @@ import { MachineNodeWidgetControls } from './MachineNodeWidgetControls';
 const S = {
   Root: styled.div`
     background: #eeffdd;
+    opacity: 0.9;
   `,
   Ports: styled.div`
     border-top: 1px solid darkolivegreen;

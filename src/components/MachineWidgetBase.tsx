@@ -17,7 +17,7 @@ const S = {
     border-radius: 2px;
     border-width: ${p => p.isSelected ? '2px' : '1px'};
     display: inline-block;
-    opacity: 0.95;
+    opacity: 0.9;
     :hover {
       background: ${hoverBackground};
     }
