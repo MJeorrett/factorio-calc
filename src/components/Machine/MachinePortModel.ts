@@ -2,18 +2,22 @@ import { PortModel, PortModelAlignment, DefaultLinkModel } from '@projectstorm/r
 
 type MachinePortModelOptions = {
   itemName: string,
+  itemsPerSecond: number,
   isIngredient: boolean,
 }
 
 export class MachinePortModel extends PortModel {
   private _itemName: string;
   private _isIngredient: boolean;
+  private _itemsPerSecond: number;
 
   get itemName(): string { return this._itemName }
   get isIngredient(): boolean { return this._isIngredient }
+  get itemsPerSecond(): number { return this._itemsPerSecond }
 
   constructor({
     itemName,
+    itemsPerSecond,
     isIngredient,
   }: MachinePortModelOptions) {
     super({
@@ -22,6 +26,7 @@ export class MachinePortModel extends PortModel {
     });
 
     this._itemName = itemName;
+    this._itemsPerSecond = itemsPerSecond;
     this._isIngredient = isIngredient;
   }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { DiagramEngine } from '@projectstorm/react-diagrams';
 import styled from '@emotion/styled';
 
-import { Recipe, MachineRecipe } from '../../data';
+import { Recipe, Machine } from '../../data';
 import { MachineWidgetBase } from '../MachineWidgetBase';
 
 import { MachinePortWidget } from './MachinePortWidget';
@@ -30,12 +30,10 @@ type MachineNodeWidgetProps = {
   engine: DiagramEngine,
   portLinks: string[],
   isSelected: boolean,
-  machineName: string,
-  label: string,
+  machine: Machine,
   ingredientPorts: MachinePortModel[],
   resultPorts: MachinePortModel[],
   machineNames: string[],
-  recipes: MachineRecipe[],
   selectedRecipe: Recipe | null,
   handleSelectMachine: (event: React.FormEvent) => void,
   handleSelectRecipe: (event: React.FormEvent) => void,
@@ -45,9 +43,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
   engine,
   isSelected,
   machineNames,
-  machineName,
-  label,
-  recipes,
+  machine,
   selectedRecipe,
   ingredientPorts,
   resultPorts,
@@ -59,9 +55,9 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
   return (
     <S.Root>
       <MachineWidgetBase
-        iconName={machineName}
+        iconName={machine.name}
         isSelected={isSelected}
-        tooltipText={label}
+        tooltipText={machine.label}
       >
         {anyPorts && (
           <S.Ports>
@@ -82,8 +78,8 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
       <MachineNodeWidgetControls
         isSelected={isSelected}
         machineNames={machineNames}
-        selectedMachineName={machineName}
-        recipes={recipes}
+        selectedMachineName={machine.name}
+        recipes={machine.recipes}
         selectedRecipe={selectedRecipe}
         onSelectMachine={handleSelectMachine}
         onSelectRecipe={handleSelectRecipe}
@@ -94,7 +90,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
   return (
     prev.isSelected === next.isSelected &&
     prev.selectedRecipe === next.selectedRecipe &&
-    prev.machineName === next.machineName &&
+    prev.machine.name === next.machine.name &&
     prev.portLinks.length === next.portLinks.length
   );
 });

@@ -1,21 +1,19 @@
 import { NodeModel, DefaultLinkModel } from '@projectstorm/react-diagrams';
 
 import { MachinePortModel } from './MachinePortModel';
-import { MachineCategory, findCategoryForMachine, MachineRecipe, getRecipesForMachine, Recipe, findRecipeByName } from '../../data';
+import { MachineCategory, findCategoryForMachine, MachineRecipe, getMachine, Recipe, findRecipeByName, Machine } from '../../data';
 
 export class MachineNodeModel extends NodeModel {
   static type = 'machine';
 
   private _machineCategory: MachineCategory;
-  private _machineName: string;
-  private _recipes: MachineRecipe[];
+  private _machine: Machine;
   private _selectedRecipe: Recipe | null = null;
   private _ingredientPorts: MachinePortModel[] = [];
   private _resultPorts: MachinePortModel[] = [];
 
-  get machineName(): string { return this._machineName }
+  get machine(): Machine { return this._machine }
   get selectedRecipe(): Recipe | null { return this._selectedRecipe }
-  get recipes(): MachineRecipe[] { return this._recipes }
   get machineCategory(): MachineCategory { return this._machineCategory }
   get ingredientPorts(): MachinePortModel[] { return this._ingredientPorts }
   get resultPorts(): MachinePortModel[] { return this._resultPorts }
@@ -31,8 +29,7 @@ export class MachineNodeModel extends NodeModel {
     });
 
     this._machineCategory = findCategoryForMachine(machineName);
-    this._machineName = machineName;
-    this._recipes = getRecipesForMachine(this.machineCategory.configKey, machineName);
+    this._machine = getMachine(this._machineCategory.configKey, machineName);
   }
 
   private removeAllPorts = () => {
@@ -46,10 +43,10 @@ export class MachineNodeModel extends NodeModel {
   }
 
   setMachineName = (value: string) => {
-    this._machineName = value;
-    this._recipes = getRecipesForMachine(this.machineCategory.configKey, this._machineName);
-    if (!this._recipes.find(r => r.name === this._selectedRecipe?.name)) {
-      this.setSelectedRecipeName(null);
+    this._machine = getMachine(this._machineCategory.configKey, value);
+
+    if (this._selectedRecipe) {
+      this.setSelectedRecipeName(this._selectedRecipe.name);
     }
   }
 
@@ -61,13 +58,23 @@ export class MachineNodeModel extends NodeModel {
       return;
     }
 
-    this._selectedRecipe = findRecipeByName(recipeName);
+    const recipe = findRecipeByName(recipeName);
+    this._selectedRecipe = recipe;
+    const craftsPerSecond = 1 / (recipe.craftingTime / this.machine.craftingSpeed);
 
-    this._selectedRecipe.ingredients.forEach(ingredient => {
-      this.addPort(new MachinePortModel({ itemName: ingredient.name, isIngredient: true }));
+    recipe.ingredients.forEach(ingredient => {
+      this.addPort(new MachinePortModel({
+        itemName: ingredient.name,
+        itemsPerSecond: craftsPerSecond * ingredient.amount,
+        isIngredient: true
+      }));
     });
-    this._selectedRecipe.results.forEach(result => {
-      this.addPort(new MachinePortModel({ itemName: result.name, isIngredient: false }));
+    recipe.results.forEach(result => {
+      this.addPort(new MachinePortModel({
+        itemName: result.name,
+        itemsPerSecond: craftsPerSecond * result.amount,
+        isIngredient: false,
+      }));
     })
   }
 

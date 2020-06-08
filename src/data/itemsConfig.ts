@@ -16,6 +16,7 @@ interface RecipeItem {
 export interface RecipeConfig extends ItemConfigBase {
   category: string,
   name: string;
+  'energy_required': number,
   ingredients: RecipeItem[],
   results: RecipeItem[],
 };

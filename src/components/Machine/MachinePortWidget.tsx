@@ -48,13 +48,14 @@ export const MachinePortWidget: React.SFC<MachinePortWidgetProps> = ({
     itemName,
     isIngredient,
     links,
+    itemsPerSecond,
   }
 }) => {
   const renderIcon = () => (
     <Icon
       itemOrRecipeName={itemName}
       size={25}
-      tooltipText={getLabel(itemName)}
+      tooltipText={`${getLabel(itemName)} @ ${itemsPerSecond} \\s`}
       tooltipPlacement={isIngredient ? 'left' : 'right'}
     />
   );

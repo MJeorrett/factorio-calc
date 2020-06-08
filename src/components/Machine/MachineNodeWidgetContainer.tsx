@@ -1,8 +1,6 @@
 import React, { useMemo } from 'react';
 import { DiagramEngine } from '@projectstorm/react-diagrams';
 
-import { getLabel } from '../../data';
-
 import { MachineNodeModel } from './MachineNodeModel';
 import { MachineNodeWidget } from './MachineNodeWidget';
 
@@ -34,10 +32,8 @@ export const MachineNodeWidgetContainer: React.SFC<MachineNodeWidgetContainerPro
         portLinks={node.portLinks}
         isSelected={node.isSelected()}
         machineNames={node.machineCategory.machineNames}
-        machineName={node.machineName}
-        recipes={node.recipes}
+        machine={node.machine}
         selectedRecipe={node.selectedRecipe}
-        label={getLabel(node.machineName)}
         ingredientPorts={node.ingredientPorts}
         resultPorts={node.resultPorts}
         handleSelectMachine={handleSelectMachine}

@@ -6,14 +6,21 @@ export type MachineRecipe = {
   label: string,
 };
 
-export const getRecipesForMachine = (configKey: MachineConfigKey, machineName: string): MachineRecipe[] => {
+export type Machine = {
+  name: string,
+  label: string,
+  craftingSpeed: number,
+  recipes: MachineRecipe[],
+};
+
+export const getMachine = (configKey: MachineConfigKey, machineName: string): Machine => {
   const machineConfig = itemsConfig[configKey][machineName];
 
   if (machineConfig === undefined) {
     throw new Error(`Could not find machine with config key '${configKey}' and name '${machineName}'.`);
   }
 
-  return Object.keys(itemsConfig.recipes)
+  const recipes = Object.keys(itemsConfig.recipes)
     .filter(recipeName => {
       const recipeCategory = itemsConfig.recipes[recipeName].category;
       return machineConfig.crafting_categories.includes(recipeCategory);
@@ -23,4 +30,11 @@ export const getRecipesForMachine = (configKey: MachineConfigKey, machineName: s
       label: getLabel(recipeName),
     }))
     .sort((a, b) => a.label > b.label ? 1 : -1);
+
+  return {
+    name: machineName,
+    label: getLabel(machineName),
+    craftingSpeed: machineConfig.crafting_speed,
+    recipes,
+  }
 };
