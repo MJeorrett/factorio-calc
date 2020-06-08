@@ -27,15 +27,17 @@ const S = {
     align-self: center;
     background: ${p => !p.isConnected ?
       'white' :
-      (p.satisfaction < 1 ?
-        'orange' :
-        portColor)};
+      p.satisfaction === 0 ?
+        'red' :
+          p.satisfaction < 1 ?
+          'orange' :
+          portColor};
     border: 1px solid ${portColor};
     border-color: ${p => p.satisfaction === 0 ?
       'red' :
-      (p.satisfaction < 1 ?
+      p.satisfaction < 1 ?
         'orange' :
-        portColor)};
+        portColor};
     border-radius: calc(${portSize} / 2);
     cursor: pointer;
     display: ${p => p.isResource ? 'none' : 'inline-block'};
