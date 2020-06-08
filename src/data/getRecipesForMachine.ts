@@ -21,5 +21,6 @@ export const getRecipesForMachine = (configKey: MachineConfigKey, machineName: s
     .map(recipeName => ({
       name: recipeName,
       label: getLabel(recipeName),
-    }));
+    }))
+    .sort((a, b) => a.label > b.label ? 1 : -1);
 };
