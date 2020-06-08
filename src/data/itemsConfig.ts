@@ -43,14 +43,15 @@ interface ResourceConfig {
   [k: string]: any,
 }
 
-export type MachineConfigKey = 'assembling-machine' | 'furnace';
+export type MachineConfigKey = 'assembling-machine' | 'furnace' | 'rocket-silo';
 
 export interface RootItemsConfig {
   'assembling-machine': MachinesConfig,
   'furnace': MachinesConfig,
   items: ItemsConfig,
   recipes: RecipesConfig,
-  resource: ResourceConfig
+  resource: ResourceConfig,
+  'rocket-silo': MachinesConfig,
 };
 
 const itemsConfig = rawItemsConfig as RootItemsConfig;

@@ -1,12 +1,15 @@
+import { MachineConfigKey } from "./itemsConfig";
+
 export type MachineCategory = {
   name: (
     'assembling-machine' |
     'furnace' |
     'chemical-plant' |
-    'oil-refinery'
+    'oil-refinery' |
+    'rocket-silo'
   ),
   label: string,
-  configKey: 'assembling-machine' | 'furnace',
+  configKey: MachineConfigKey,
   machineNames: string[],
   defaultMachine: string,
 };
@@ -52,6 +55,15 @@ export const machineCategories: MachineCategory[] = [
     ],
     defaultMachine: 'electric-furnace',
   },
+  {
+    name: 'rocket-silo',
+    label: 'Rocket Silo',
+    configKey: 'rocket-silo',
+    machineNames: [
+      'rocket-silo',
+    ],
+    defaultMachine: 'rocket-silo',
+  }
 ];
 
 export const findCategoryForMachine = (machineName: string): MachineCategory => {
