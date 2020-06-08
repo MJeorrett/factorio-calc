@@ -30,6 +30,11 @@ export const MachineNodeWidgetContainer: React.SFC<MachineNodeWidgetContainerPro
     engine.repaintCanvas();
   }, [engine, node]);
 
+  const handleFitMachineCount = useMemo(() => () => {
+    node.fitMachineCount();
+    engine.repaintCanvas();
+  }, [engine, node]);
+
   return (
     <>
       <MachineNodeWidget
@@ -46,6 +51,7 @@ export const MachineNodeWidgetContainer: React.SFC<MachineNodeWidgetContainerPro
         handleSelectMachine={handleSelectMachine}
         handleSelectRecipe={handleSelectRecipe}
         handleSetMachineCount={handleSetMachineCount}
+        handleFitMachineCount={handleFitMachineCount}
       />
     </>
   );

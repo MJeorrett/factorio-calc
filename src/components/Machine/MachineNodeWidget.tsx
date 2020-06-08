@@ -41,6 +41,7 @@ type MachineNodeWidgetProps = {
   handleSelectMachine: (event: React.FormEvent) => void,
   handleSelectRecipe: (event: React.FormEvent) => void,
   handleSetMachineCount: (count: number) => void,
+  handleFitMachineCount: () => void,
 };
 
 export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo(({
@@ -55,6 +56,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
   handleSelectMachine,
   handleSelectRecipe,
   handleSetMachineCount,
+  handleFitMachineCount,
 }) => {
   const anyPorts = ingredientPorts.length + resultPorts.length > 0;
 
@@ -91,6 +93,7 @@ export const MachineNodeWidget: React.SFC<MachineNodeWidgetProps> = React.memo((
         onSelectMachine={handleSelectMachine}
         onSelectRecipe={handleSelectRecipe}
         onSetMachineCount={handleSetMachineCount}
+        onFitMachineCount={handleFitMachineCount}
       />
     </S.Root>
   );

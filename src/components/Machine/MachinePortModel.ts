@@ -46,6 +46,15 @@ export class MachinePortModel extends PortModel {
     this._isResource = isResource;
   }
 
+  getTotalRequestedItemsPerSecond(): number {
+    const resultLinks = this._allLinks.filter(link => link.getSourcePort() === this);
+
+    return resultLinks.reduce((total, link) => {
+      const targetPort = link.getTargetPort() as MachinePortModel;
+      return total + targetPort.itemsPerSecond;
+    }, 0);
+  }
+
   createLinkModel() {
     if (this._isIngredient) return null;
 
@@ -85,10 +94,7 @@ export class MachinePortModel extends PortModel {
 
   updateLinks() {
     const resultLinks = this._allLinks.filter(link => link.getSourcePort() === this);
-    const totalRequestedItemsPerSecond = resultLinks.reduce((total, link) => {
-      const targetPort = link.getTargetPort() as MachinePortModel;
-      return total + targetPort.itemsPerSecond;
-    }, 0);
+    const totalRequestedItemsPerSecond = this.getTotalRequestedItemsPerSecond();
     const percentageLinkSatisfaction = Math.min(1, this.itemsPerSecond / totalRequestedItemsPerSecond);
     resultLinks.forEach(link => {
       const machineLink = link as MachineLinkModel;

@@ -62,6 +62,7 @@ type MachineNodeWidgetProps = {
   onSelectMachine: (event: React.FormEvent) => void,
   onSelectRecipe: (event: React.FormEvent) => void,
   onSetMachineCount: (count: number) => void,
+  onFitMachineCount: () => void,
 };
 
 type ControlButtonProps = {
@@ -80,6 +81,7 @@ export const MachineNodeWidgetControls: React.SFC<MachineNodeWidgetProps> = ({
   onSelectMachine,
   onSelectRecipe,
   onSetMachineCount,
+  onFitMachineCount,
 }) => {
   const createHandleIcrementMachineCount = (n: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
     onSetMachineCount(machineCount + n);
@@ -111,6 +113,7 @@ export const MachineNodeWidgetControls: React.SFC<MachineNodeWidgetProps> = ({
           <ControlButton machineCount={machineCount} delta={10}>+10</ControlButton>
           <ControlButton machineCount={machineCount} delta={100}>+100</ControlButton>
           <ControlButton machineCount={machineCount} delta={1000}>+1000</ControlButton>
+          <S.ControlButton type="button" onClick={onFitMachineCount}>Fit</S.ControlButton>
         </S.ControlButtonsSet>
         <S.ControlButtonsSet>
           <ControlButton machineCount={machineCount} delta={-1}>-1</ControlButton>

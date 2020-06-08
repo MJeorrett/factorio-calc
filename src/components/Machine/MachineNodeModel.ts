@@ -81,6 +81,16 @@ export class MachineNodeModel extends NodeModel {
     this.updatePortsCraftsPerSecond();
   }
 
+  fitMachineCount = () => {
+    let maxRequiredMachines = 0;
+    this._resultPorts.forEach((port: MachinePortModel) => {
+      const test = port.getTotalRequestedItemsPerSecond();
+      const requiredMachines = test / (port.itemsPerSecond / this._machineCount);
+      maxRequiredMachines = Math.max(requiredMachines, maxRequiredMachines);
+    });
+    this.setMachineCount(Math.ceil(maxRequiredMachines));
+  }
+
   setSelectedRecipeName = (recipeName: string | null) => {
     if (recipeName === null) {
       this.removeAllPorts();
