@@ -13,11 +13,14 @@ export class MachinePortModel extends PortModel {
   private _itemName: string;
   private _isIngredient: boolean;
   private _itemsPerSecond: number;
+  private _satisfaction: number = 0;
+
+  private get _allLinks(): MachineLinkModel[] { return Object.keys(this.links).map(linkName => this.links[linkName] as MachineLinkModel) }
 
   get itemName(): string { return this._itemName }
   get isIngredient(): boolean { return this._isIngredient }
   get itemsPerSecond(): number { return this._itemsPerSecond }
-  private get _allLinks(): DefaultLinkModel[] { return Object.keys(this.links).map(linkName => this.links[linkName] as DefaultLinkModel) }
+  get satisfaction(): number { return this._satisfaction }
 
   constructor({
     itemName,
@@ -56,10 +59,22 @@ export class MachinePortModel extends PortModel {
     this.updateLinks();
   }
 
+  updateSatisfaction() {
+    const supplyLinks = this._allLinks.filter(link => link.getTargetPort() === this);
+    const totalSupply = supplyLinks.reduce((total, link) => {
+      return total + link.itemsPerSecond;
+    }, 0)
+
+    this._satisfaction = round(totalSupply / this._itemsPerSecond);
+  }
+
   updateLinks() {
-    const itemsPerSecondPerLink = this._itemsPerSecond / this._allLinks.length;
+    const itemsPerSecondPerLink = round(this._itemsPerSecond / this._allLinks.length);
     this._allLinks.forEach(link => {
-      (link as MachineLinkModel).updateItemsPerSecond(itemsPerSecondPerLink);
+      const machineLink = link as MachineLinkModel;
+      machineLink.updateItemsPerSecond(itemsPerSecondPerLink);
+      const targetPort = machineLink.getTargetPort() as MachinePortModel;
+      targetPort.updateSatisfaction();
     });
   }
 }

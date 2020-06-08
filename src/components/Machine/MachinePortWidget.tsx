@@ -49,6 +49,7 @@ export const MachinePortWidget: React.SFC<MachinePortWidgetProps> = ({
     isIngredient,
     links,
     itemsPerSecond,
+    satisfaction,
   }
 }) => {
   const renderIcon = () => (
@@ -69,6 +70,7 @@ export const MachinePortWidget: React.SFC<MachinePortWidgetProps> = ({
         isConnected={Object.keys(links).length > 0}
       />
       {isIngredient && renderIcon()}
+      {satisfaction}
     </S.Root>
   );
 };

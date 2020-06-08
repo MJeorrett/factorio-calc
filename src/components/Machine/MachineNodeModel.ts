@@ -13,12 +13,13 @@ export class MachineNodeModel extends NodeModel {
   private _ingredientPorts: MachinePortModel[] = [];
   private _resultPorts: MachinePortModel[] = [];
 
+  private get _allPorts(): MachinePortModel[] { return [...this._ingredientPorts, ...this._resultPorts] }
+
   get machine(): Machine { return this._machine }
   get selectedRecipe(): Recipe | null { return this._selectedRecipe }
   get machineCategory(): MachineCategory { return this._machineCategory }
   get ingredientPorts(): MachinePortModel[] { return this._ingredientPorts }
   get resultPorts(): MachinePortModel[] { return this._resultPorts }
-  private get _allPorts(): MachinePortModel[] { return [...this._ingredientPorts, ...this._resultPorts] }
 
   get portLinks(): string[] {
     return Object.keys(this.ports).reduce((portLinks: string[], port) => {
